@@ -1,0 +1,41 @@
+# Mauricio Hugo López Martín: del comercio exterior al software
+
+*De una necesidad operativa a una carrera de productos digitales*
+
+## Aprender el oficio antes de programarlo
+
+En 1977, Mauricio cursó 1.º B en la Escuela Primaria N.º 45 de Caseros. Más tarde completó la carrera de Sistemas en la UTN, donde estudió entre 1989 y 1996. Ese mismo año comenzó su recorrido en comercio exterior, también llamado COMEX: la actividad que organiza importaciones, exportaciones, documentación aduanera y coordinación entre empresas, despachantes y organismos. Conoció sus rutinas desde dentro antes de convertir sus dificultades en ideas de software.
+
+Sus primeros pasos de programación fueron con COBOL y assembler. En sus recuerdos, el cambio de herramientas nunca apagó el interés: programar siguió siendo algo que le salía “natural”. En 1997 ya aparece vinculado a G.T.C. Group SRL, una empresa cuyo objeto incluía importación, exportación y servicios aduaneros. Ese cruce temprano entre operación y tecnología se convertiría en el hilo conductor de su trabajo.
+
+**ELDESPA.COM: reunir lo que el operador necesita.** El sitio, visible en archivos de 2006, ofrecía formularios, rótulos, una librería, directorio, información de buques, bolsa de trabajo y datos SIM. Su función era servir de punto de consulta para quienes trabajaban en aduana: en vez de buscar cada recurso en sitios distintos, podían encontrar herramientas y referencias en una misma ventanilla digital. Es el proyecto digital más antiguo que puede rastrearse en su trayectoria.
+
+**Documentación Aduanera: ordenar el soporte del comercio.** En 2006 participó en Gestión de Documentación Aduanera SA y en 2009 cofundó Documentos Aduaneros SA, donde fue presidente inicial. Los objetos de estas sociedades combinaron la gestión aduanera con informática y almacenamiento físico y digital. La apuesta parece clara: ayudar a organizar documentos que acompañan cada operación y conservarlos accesibles. Si ELDESPA reunía recursos en línea, estas iniciativas atendían el problema más amplio de administrar el respaldo documental del comercio exterior.
+
+## De resolver su problema a diseñar para otros
+
+**SIDOM: un sistema nacido de la experiencia del usuario.** Mauricio cuenta que lo creó porque, trabajando en comercio exterior, necesitaba una herramienta que no tenía. Su explicación del método es concreta: definir el resultado, entender las necesidades de quien usará el software, “ponerse en sus zapatos” al probarlo y, finalmente, programar. El feedback no aparece como una encuesta al final del proceso: según su relato, el equipo de atención escucha lo que ocurre en el uso cotidiano y convierte esa experiencia en decisiones para el producto. Lo resume así: “gracias a los usuarios es que existe SIDOM”; también dice que “el usuario nos dijo qué hacer”.
+
+SIDOM está orientado a operaciones de comercio exterior y se presenta como una solución que integra servicios mediante APIs, es decir, conexiones que permiten que distintos sistemas intercambien datos. La integración busca evitar volver a cargar información y simplificar tareas que cruzan varias herramientas. Un registro de 2013 identifica a Mauricio y Fernando Hugo Quirós como autores y titulares de una versión del sistema; su historia societaria posterior reúne a colaboradores que también aparecen en Quarks Up.
+
+**PCM y MISIM: el desafío siguiente.** PCM era un sistema para pasar datos al sistema aduanero. Mauricio recuerda que al principio lo intimidaba y pensó: “no lo voy a poder hacer”. Después desarrolló MISIM y miró aquel temor con otra escala: “mi favorito siempre es el próximo”. La secuencia muestra cómo cuenta su aprendizaje: una dificultad técnica deja de ser un límite cuando se la atraviesa y abre paso a otro proyecto. MISIM figura entre sus creaciones. Mi hipótesis es que representó un salto desde la transferencia de datos de PCM hacia una gestión más amplia de la información aduanera; la secuencia de proyectos y su foco de trabajo permiten leerlo así.
+
+**Quarks Up: la colaboración como estructura.** Quarks Up no aparece aquí como una aplicación, sino como una sociedad que formalizó el trabajo con colaboradores recurrentes. Constituida en 2019, designó a Mauricio presidente en 2023. En la trayectoria cumple una función organizativa: reúne personas y responsabilidades alrededor de proyectos tecnológicos.
+
+**GATEWAY: del documento a la acción.** GATEWAY es la línea de soluciones de MHLM enfocada en comercio exterior. Su propuesta parte de documentos y novedades operativas para ayudar a despachantes a consultar y actualizar información del servicio MOA (Mis Operaciones Aduaneras), donde se siguen operaciones y novedades aduaneras. Busca transformar esos datos en tareas y próximos pasos, reduciendo búsquedas y seguimiento manual. NOÉ aparece dentro de este entorno como asistente para aplicaciones fiscales y aduaneras.
+
+**AIWHI y Radar COMEX: ampliar el tipo de problema.** AIWHI lleva la lógica de automatización a la contabilidad: anuncia conciliaciones, informes y análisis asistidos por inteligencia artificial para ayudar a procesar y relacionar información contable. Radar COMEX resuelve una necesidad diferente y más abierta: consultar normas, nomenclatura y tipos de cambio, con enlaces a fuentes oficiales. El portafolio se ensancha desde el despacho aduanero hacia otros trabajos intensivos en datos, pero mantiene una pregunta común: qué tarea puede hacerse más simple si la información está mejor organizada y conectada.
+
+## Una forma de trabajar y una idea de futuro
+
+En sus reflexiones sobre software, Mauricio formula otro criterio de diseño: “En software, bello y elegante significa fácil y barato de hacer y mantener”. La frase desplaza la elegancia de la apariencia hacia la utilidad y el costo de sostener un producto. Junto con su insistencia en probar desde el lugar del usuario, dibuja una filosofía práctica: un sistema vale si resuelve una necesidad real y puede seguir funcionando sin volverse una carga.
+
+También cuestiona las promesas grandilocuentes y las métricas infladas en el mundo del software como servicio (SaaS), y defiende los resultados concretos y el reconocimiento de la autoría. En una publicación retoma a Steve Jobs con la frase “la tecnología no es nada, lo importante es la fe en la gente”. Junto con referencias a Nietzsche, Rousseau y Platón, esas citas le sirven para hablar de tecnología, creatividad y esfuerzo. No las presenta como una afición académica, sino como frases e imágenes que le sirven para enmarcar ideas. En otra publicación escribió: “para mí trabajar es mi proyecto siempre”. La frase sugiere que entiende el trabajo menos como una tarea delimitada y más como un espacio continuo de creación. Star Wars aparece en varias publicaciones y “Que la fuerza te acompañe” convive con bromas de programación; un meme explica back-end como cocina, front-end como salón y APIs como camareros. El humor funciona como traducción: acerca un vocabulario técnico a quienes no trabajan a diario con software.
+
+En su costado más cotidiano aparece también Fito Páez: una publicación personal de Instagram usa una de sus canciones. Es una pista de gusto musical, no alcanza para asegurar que sea fan, pero suma una nota personal a una presencia pública muy ligada al trabajo.
+
+En una conversación reciente, Mauricio expresó que quería “revolucionar nuevamente” el comercio exterior y dejó entrever una idea que describió como “un Instagram de comercio exterior”. Todavía no hay detalles para definir el producto, pero la imagen sugiere una apuesta por conectar actores del sector y hacer circular información de manera más social y directa. Es una hipótesis coherente con su recorrido: pasar de reunir recursos, a integrar sistemas y luego imaginar una capa de comunidad sobre la actividad.
+
+Mi lectura es la de un desarrollador que piensa como usuario y como operador: empieza por una fricción concreta, escucha la experiencia y construye desde ahí. Su lenguaje combina pragmatismo —facilidad y costo de mantenimiento— con curiosidad por el siguiente desafío y voluntad de ampliar el alcance de sus ideas. La ambición de un “Instagram de comercio exterior” sería, si se concreta, la versión más expansiva de esa misma intuición: cambiar no solo una tarea, sino la forma en que el sector se encuentra y comparte conocimiento.
+
+

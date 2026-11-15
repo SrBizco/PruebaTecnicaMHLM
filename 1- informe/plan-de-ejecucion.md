@@ -94,3 +94,9 @@
 - La información sensible o invasiva queda fuera incluso si es accesible públicamente; el plan no ordena copiarla ni divulgarla.
 - El límite de páginas se aplica solo al informe, no al inventario de investigación.
 - No hay ramas, commits ni pushes delegados.
+
+## Ajuste editorial 1.5 — nueva estructura del informe
+
+La redacción inicial se considera un borrador de contenido, no la estructura final. Reorganizarla en: presentación académica y primera iniciativa identificable; itinerario proyecto por proyecto con propósito, problema atendido, aporte/innovación sustentable y declaraciones de Mauricio; sección de voz pública basada en posteos y videos; síntesis final que relacione proyectos y opiniones. No afirmar cuál fue literalmente el primer proyecto si solo se conoce el más antiguo rastreable. En la evidencia actual ELDESPA es el proyecto digital más antiguo identificable (captura archivada de 2006), mientras el perfil declara actividad de software desde fines de los noventa; la brecha debe quedar explícita.
+
+La formación en Sistemas en la UTN debe respaldarse antes de presentarla como hecho documental. El extracto de LinkedIn revisado solo acredita UTN y período 1989–1996, no especialidad ni título. Incorporar el material de Facebook que aporte el usuario como nuevas fuentes a biblia/matriz, con URL, fecha, autoría/contexto y minuto/transcripción si es video. El agente redactor revisará el borrador con la evidencia existente y dejará listo el punto de integración de esos materiales, sin inventar contenido de Facebook.
