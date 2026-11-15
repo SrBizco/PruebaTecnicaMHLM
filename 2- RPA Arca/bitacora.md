@@ -43,3 +43,8 @@ Se agrega una entrega ejecutable independiente sin reemplazar main.py. PyInstall
 ### Corrección de detección de Chromium en el ejecutable
 
 La prueba inicial con PLAYWRIGHT_BROWSERS_PATH explícito ocultó una diferencia del entorno empaquetado: Playwright buscaba el navegador junto al driver temporal, mientras el instalador lo descargaba en el perfil de Windows. Se unificó la ruta persistente antes de ambas operaciones y se agregaron pruebas sin configuración explícita y con el valor especial 0. Corrección preparada para la Release rpa-v1.0.1, autorizada por el usuario. Pasaron 22 pruebas y la comprobación del ejecutable con la configuración normal. La prueba con un perfil simulado fue bloqueada; queda pendiente verificar la instalación en la segunda PC.
+
+
+### Release rpa-v1.0.2: perfiles y actualización de resultados
+
+Se reprodujo un fallo exclusivo del empaquetado: faltaba win32timezone, importado dinámicamente al enumerar credenciales. Esto también interrumpía la inicialización antes de programar la recepción de mensajes, dejando la interfaz en Abriendo el portal. Se incluyó la dependencia y se añadió --check-app para probar el binario con un perfil ficticio aislado (eliminado al terminar), extracción sintética y visualización. La prueba empaquetada pasó y el usuario confirmó la corrección antes de autorizar esta Release.

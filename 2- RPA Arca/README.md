@@ -135,3 +135,8 @@ El código original sigue ejecutándose con `.venv\Scripts\python.exe main.py`. 
 Para reconstruir: prepara `.venv` con `requirements.txt` y ejecuta `build.ps1` desde PowerShell. La herramienta de empaquetado está fijada en `requirements-build.txt`. El empaquetado recoge los módulos y recursos necesarios; no incorpora el repositorio completo, perfiles, `.env` ni las credenciales de Windows. `build/`, `dist/` y el archivo `.spec` generado se excluyen de Git. El binario debe entregarse aparte o como artefacto de una release, no en lugar del código.
 
 El ejecutable no está firmado digitalmente. La instalación del navegador utiliza los servidores de descarga de Playwright; después, el RPA opera contra ARCA. No se descargan nuevas versiones del programa ni se actualizan bibliotecas automáticamente.
+
+
+### Versión rpa-v1.0.2
+
+Incluye win32timezone para la enumeración de perfiles dentro del ejecutable. `ARCA-RPA.exe --check-app` ejecuta una prueba local con datos ficticios: crea y elimina un perfil de prueba bajo un prefijo aislado, lee una página sintética y comprueba la presentación del resultado. No usa cuentas reales ni envía credenciales a ARCA. El código de esa comprobación está en app_smoke.py.

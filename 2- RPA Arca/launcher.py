@@ -120,7 +120,10 @@ def main():
 
 
 if __name__ == "__main__":
-    if "--check-runtime" in sys.argv:
+    if "--check-app" in sys.argv:
+        from app_smoke import run
+        sys.exit(run())
+    elif "--check-runtime" in sys.argv:
         try:
             root = tk.Tk(); root.withdraw(); root.destroy()
             sys.exit(0 if check_runtime() else 2)
