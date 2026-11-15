@@ -1,7 +1,9 @@
 import unittest
+from unittest.mock import patch
+from credential_store import Profile
 import threading
 from playwright.sync_api import sync_playwright
-from arca_browser import _open_services, _extract_visible_services, _logout_portal, WorkflowError
+from arca_browser import _open_services, _extract_visible_services, _logout_portal, _fill_cuit_form, _fill_profile_login, _fill_password_form, WorkflowError
 
 HOME = '<main><section><h3>Servicios | Más utilizados</h3><a href="/portal/app/mis-servicios">Ver todos</a></section></main>'
 LIST = '''<main role="main"><section><div><h3>Mis servicios</h3>
@@ -55,7 +57,7 @@ class PortalTests(unittest.TestCase):
 
     def test_logout_opens_menu_and_returns_to_login(self):
         self.context.route('https://auth.afip.gob.ar/**', lambda route: route.fulfill(
-            content_type='text/html', body='<h1>Ingresar con Clave Fiscal</h1>'))
+            content_type='text/html', body='<label>CUIT/CUIL</label><input id="F1:username" type="number">'))
         self.page.goto('https://portalcf.cloud.afip.gob.ar/portal/app/mis-servicios')
         self.page.set_content("""<header><div id="iconoChicoContribuyenteAFIP"
             onclick="document.getElementById('contBtnContribuyente').hidden=false">Usuario de prueba</div></header>
@@ -71,6 +73,37 @@ class PortalTests(unittest.TestCase):
             _logout_portal(self.page, timeout=300)
         self.assertFalse(self.page.is_closed())
         self.assertEqual(len(self.context.pages), 1)
+
+    def test_cuit_form_without_old_heading(self):
+        self.page.goto('https://auth.afip.gob.ar/contribuyente_/login.xhtml')
+        self.page.set_content('<label>CUIT/CUIL</label><input id="F1:username" type="number"><input type="submit" value="Siguiente">')
+        _fill_cuit_form(self.page, '00000000000')
+        self.assertEqual(self.page.locator('[id="F1:username"]').input_value(), '00000000000')
+
+    def test_cuit_rejects_other_official_host(self):
+        self.page.goto('https://www.arca.gob.ar/login')
+        self.page.set_content('<label>CUIT/CUIL</label><input id="F1:username" type="number">')
+        with self.assertRaises(WorkflowError):
+            _fill_cuit_form(self.page, '00000000000')
+        self.assertEqual(self.page.locator('input').input_value(), '')
+
+    def test_profile_advances_and_fills_password_without_visible_cuit(self):
+        self.page.goto('https://auth.afip.gob.ar/contribuyente_/login.xhtml')
+        self.page.set_content("""<label>CUIT/CUIL</label><input id="F1:username" type="number">
+        <input id="F1:btnSiguiente" type="submit" value="Siguiente"
+        onclick="document.body.innerHTML='<label>Clave fiscal</label><input type=password><button>Ingresar</button>'">""")
+        with patch('arca_browser.get_password', return_value='ficticia') as read:
+            _fill_profile_login(self.page, Profile('test', 'Prueba', '00000000000'))
+        read.assert_called_once()
+        self.assertEqual(self.page.locator('input[type=password]').input_value(), 'ficticia')
+
+    def test_different_visible_cuit_never_reads_secret(self):
+        self.page.goto('https://auth.afip.gob.ar/contribuyente_/login.xhtml')
+        self.page.set_content('<p>CUIT 11-11111111-1 Clave fiscal</p><input type="password">')
+        with patch('arca_browser.get_password') as read:
+            with self.assertRaises(WorkflowError):
+                _fill_password_form(self.page, Profile('test', 'Prueba', '00000000000'), submitted_cuit='00000000000')
+        read.assert_not_called()
 
 if __name__ == '__main__':
     unittest.main()

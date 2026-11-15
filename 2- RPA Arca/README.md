@@ -115,3 +115,13 @@ Si la aplicación se cierra inesperadamente, comprueba en el navegador que la se
 ### Cierre y foco de la ventana
 
 Después de obtener resultados, la aplicación vuelve al frente sin permanecer siempre por encima de otras ventanas. El cierre automático usa los controles observados `header #iconoChicoContribuyenteAFIP` y `#contBtnContribuyente button[title="Salir"]`. Si el portal no vuelve directamente al ingreso, se verifica el acceso a Mis servicios desde otra pestaña del mismo contexto efímero, sin copiar cookies ni credenciales. No se considera suficiente el simple cierre de una ventana. Esta validación del cierre pasó pruebas sintéticas; queda pendiente comprobar la redirección real. La cancelación antes de obtener resultados mantiene el comportamiento anterior de cerrar el navegador sin confirmar una salida del servidor.
+
+
+### Actualización del acceso con perfil
+
+El robot completa la CUIT, verifica el valor y el host, pulsa Siguiente y espera el campo de clave en la misma pestaña. Ya no hay que confirmar manualmente el cambio de pantalla en la aplicación. La transición controlada sustituye la exigencia de CUIT visible; una CUIT distinta detectada bloquea la recuperación del secreto. El usuario sigue enviando el formulario final y resolviendo desafíos en ARCA. Esta actualización prevalece sobre las instrucciones anteriores del modo con perfil.
+
+
+### Envío final y cierre (actualización)
+
+En modo guardado, el robot pulsa también Ingresar, una sola vez, usando su nombre accesible. Chromium se minimiza al crear la ventana; la autenticación manual conserva el navegador visible. Si ARCA requiere intervención, se puede restaurar Chromium desde la barra de tareas. No se garantiza que Windows nunca muestre una ventana transitoria. La salida se reconoce por el campo real de CUIT en el host de autenticación, no por el encabezado antiguo. Si no se confirma la salida, se cierra el contexto local y se informa expresamente que el cierre del servidor no pudo verificarse; la aplicación no queda bloqueada. Estas reglas sustituyen las instrucciones anteriores sobre envío final y reintento obligatorio de cierre.

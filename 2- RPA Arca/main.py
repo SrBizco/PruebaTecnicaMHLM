@@ -292,7 +292,7 @@ class ArcaApp:
                 return
             if not messagebox.askokcancel(
                 "Usar perfil guardado",
-                f"Se leerá la clave del perfil «{profile.label}» solo después de que avances desde la etapa de CUIT a la pantalla de clave HTTPS oficial de ARCA. ¿Continuar?",
+                f"Se leerá la clave del perfil «{profile.label}» al reconocer la pantalla de clave HTTPS oficial de ARCA. El robot completará la CUIT, pulsará Siguiente y completará la clave. ¿Continuar?",
                 parent=self.root,
             ):
                 return
@@ -424,6 +424,8 @@ class ArcaApp:
                     self.action_stage = None
                     self.has_results = False
                     if self.closing:
+                        if self.status.get().startswith("No se pudo verificar la salida"):
+                            messagebox.showwarning("Cierre sin verificar", self.status.get(), parent=self.root)
                         self.root.destroy()
                         return
                     if self.status.get().startswith("Cerrando"):

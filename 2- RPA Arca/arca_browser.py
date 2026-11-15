@@ -76,7 +76,9 @@ def _fill_cuit_form(page: Page, cuit: str) -> None:
     if _require_https_official(page.url) != LOGIN_HOST:
         raise WorkflowError("La dirección de autenticación no coincide con el host oficial esperado.")
     try:
-        page.get_by_text(LOGIN_TITLE).wait_for(state="visible", timeout=15_000)
+        page.locator('input[id="F1:username"]').wait_for(state="visible", timeout=15_000)
+        if _require_https_official(page.url) != LOGIN_HOST:
+            raise WorkflowError("La dirección cambió durante la espera del campo CUIT. No se completó.")
         password_fields = page.locator("input[type='password']")
         if any(password_fields.nth(i).is_visible() for i in range(password_fields.count())):
             raise WorkflowError("ARCA mostró un formulario combinado o distinto. No se completó.")
@@ -111,14 +113,19 @@ def _fill_cuit_form(page: Page, cuit: str) -> None:
             raise WorkflowError(
                 "No se reconoció el campo CUIT/CUIL del formulario oficial. No se completó."
             )
-        user_field.fill(cuit, timeout=5_000)
+        if user_field.get_attribute("id") != "F1:username":
+            raise WorkflowError("El campo no coincide con el acceso oficial observado. No se completó.")
+        handle = user_field.element_handle(timeout=5_000)
+        if handle is None or _require_https_official(page.url) != LOGIN_HOST:
+            raise WorkflowError("La pantalla cambió antes de completar la CUIT.")
+        handle.fill(cuit, timeout=5_000)
     except PlaywrightTimeoutError as exc:
         raise WorkflowError(
             "El paso de CUIT del formulario oficial no respondió como se esperaba. No se completó."
         ) from exc
 
 
-def _fill_password_form(page: Page, profile: Profile) -> None:
+def _fill_password_form(page: Page, profile: Profile, *, submitted_cuit: str | None = None) -> None:
     def validate_current_password_screen(wait_for_field: bool = True):
         if _require_https_official(page.url) != LOGIN_HOST:
             raise WorkflowError("La pantalla de clave no está en el host oficial de autenticación.")
@@ -148,7 +155,12 @@ def _fill_password_form(page: Page, profile: Profile) -> None:
             if value_digits == profile.cuit:
                 identity_matches = True
                 break
-        if not identity_matches and profile.cuit not in page_digits:
+        # A controlled CUIT -> password transition on this same page is also
+        # identity evidence; ARCA need not repeat the CUIT visibly.
+        shown_cuits = re.findall(r"\b\d{2}-\d{8}-\d\b", body)
+        if shown_cuits and any(re.sub(r"\D", "", value) != profile.cuit for value in shown_cuits):
+            raise WorkflowError("La pantalla muestra una CUIT distinta. No se recuperó la clave.")
+        if not identity_matches and profile.cuit not in page_digits and submitted_cuit != profile.cuit:
             raise WorkflowError(
                 "No se pudo comprobar que la pantalla de clave corresponde a la CUIT del perfil. La clave no se recuperó."
             )
@@ -179,6 +191,24 @@ def _fill_password_form(page: Page, profile: Profile) -> None:
         raise WorkflowError("El paso de clave del formulario oficial no respondió como se esperaba.") from exc
     finally:
         password = None
+
+
+def _fill_profile_login(page: Page, profile: Profile) -> None:
+    """Keep both stages on the same page and advance only the validated CUIT form."""
+    _fill_cuit_form(page, profile.cuit)
+    field = page.locator('input[id="F1:username"]')
+    if _require_https_official(page.url) != LOGIN_HOST or field.input_value() != profile.cuit:
+        raise WorkflowError("La CUIT o la dirección cambió antes de avanzar. No se recuperó la clave.")
+    next_button = page.locator('input[id="F1:btnSiguiente"][type="submit"]')
+    next_button.click(timeout=5_000)
+    # No manual handoff: wait for the password stage in the same browser page.
+    _fill_password_form(page, profile, submitted_cuit=profile.cuit)
+    if _require_https_official(page.url) != LOGIN_HOST:
+        raise WorkflowError("La dirección cambió antes de enviar el ingreso.")
+    # Semantic selector: do not guess an arbitrary submit control or retry passwords.
+    submit = page.get_by_role("button", name=re.compile(r"^Ingresar$", re.I))
+    submit.click(timeout=5_000)
+
 
 
 def _latest_official_page(
@@ -384,7 +414,7 @@ def _logout_portal(page: Page, timeout: int = 15_000) -> None:
             raise WorkflowError("Se cerró la pestaña sin poder verificar la salida.")
         url = urlparse(page.url)
         if url.scheme == "https" and url.hostname == LOGIN_HOST:
-            if page.get_by_text(LOGIN_TITLE).is_visible():
+            if page.locator('input[id="F1:username"]').is_visible():
                 return
         if not _is_portal(page):
             break
@@ -395,7 +425,7 @@ def _logout_portal(page: Page, timeout: int = 15_000) -> None:
                    wait_until="domcontentloaded", timeout=timeout)
         probe.wait_for_url(lambda url: urlparse(url).scheme == "https"
                           and urlparse(url).hostname == LOGIN_HOST, timeout=timeout)
-        probe.get_by_text(LOGIN_TITLE).wait_for(state="visible", timeout=timeout)
+        probe.locator('input[id="F1:username"]').wait_for(state="visible", timeout=timeout)
     except PlaywrightTimeoutError as exc:
         raise WorkflowError("No se pudo confirmar el cierre de sesión. El navegador sigue abierto para revisar o reintentar.") from exc
     finally:
@@ -414,12 +444,16 @@ def _finish_session(context, finish_event, messages):
         finish_event.clear()
         try:
             portals = [p for p in live if _is_portal(p)]
+            if not portals and any(urlparse(p.url).hostname == LOGIN_HOST
+                                   and p.locator('input[id="F1:username"]').is_visible() for p in live):
+                messages.put(("logout_status", "ARCA solicita nuevamente el ingreso. Cerrando navegador…"))
+                return
             if not portals:
                 raise WorkflowError("No se encontró el portal para verificar el cierre de sesión.")
             _logout_portal(portals[-1])
         except (WorkflowError, PlaywrightTimeoutError):
-            messages.put(("logout_error", "No se pudo confirmar la salida de ARCA. El navegador sigue abierto; revisa el portal y pulsa Reintentar cierre de sesión."))
-            continue
+            messages.put(("logout_status", "No se pudo verificar la salida en ARCA. Se cerrará el navegador local; no se confirma el cierre de sesión del servidor."))
+            return
         messages.put(("logout_status", "Sesión cerrada: ARCA volvió a solicitar el ingreso. Cerrando navegador…"))
         return
 
@@ -446,6 +480,16 @@ def run_workflow(
                 context = browser.new_context()
                 context.set_default_timeout(10_000)
                 page = context.new_page()
+                if mode == "profiles":
+                    session = context.new_cdp_session(page)
+                    try:
+                        window_id = session.send("Browser.getWindowForTarget")["windowId"]
+                        session.send("Browser.setWindowBounds", {
+                            "windowId": window_id, "bounds": {"windowState": "minimized"}
+                        })
+                    finally:
+                        session.detach()
+
                 page.set_default_navigation_timeout(30_000)
 
                 login_url = _official_login_url(page)
@@ -457,26 +501,10 @@ def run_workflow(
                     raise WorkflowError("El portal redirigió a un host inesperado antes del acceso.")
 
                 if mode == "profiles":
-                    _fill_cuit_form(page, profile.cuit)
-                    messages.put((
-                        "ready_cuit",
-                        "CUIT completada. Revisa el dominio y pulsa Siguiente en ARCA. Cuando aparezca la pantalla de clave, continúa aquí.",
-                    ))
-                    cuit_page = _wait_for_action(
-                        context, page, cuit_continue_event, finish_event, expected_host=LOGIN_HOST
-                    )
-                    if cuit_page is None:
-                        if finish_event.is_set():
-                            return
-                        raise WorkflowError("Se agotó la espera del paso de CUIT. Vuelve a iniciar el RPA.")
-                    login_page = _latest_official_page(context, expected_host=LOGIN_HOST) or cuit_page
-                    if login_page is None:
-                        raise WorkflowError("No se encontró el paso oficial de clave fiscal en el navegador.")
-                    _fill_password_form(login_page, profile)
-                    page = login_page
+                    _fill_profile_login(page, profile)
                     messages.put((
                         "waiting_services",
-                        "Clave completada en el formulario HTTPS oficial. Revisa el dominio, envía el formulario, resuelve los desafíos. El robot abrirá y leerá Mis servicios automáticamente.",
+                        "Ingreso enviado a ARCA. Si requiere verificación, abre el navegador minimizado desde la barra de tareas. El robot leerá Mis servicios automáticamente.",
                     ))
                 else:
                     messages.put((
