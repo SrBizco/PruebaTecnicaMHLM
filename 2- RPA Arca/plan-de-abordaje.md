@@ -1,8 +1,8 @@
 # Plan de abordaje — RPA local para consultar servicios de ARCA
 
-**Versión:** 0.2  
+**Versión:** 0.3
 **Fecha:** 15 de noviembre de 2026  
-**Estado:** diseño propuesto; pendiente de aprobación. No se implementó código.
+**Estado:** diseño aprobado; primera implementación escrita, pendiente de validación local del portal.
 
 ## 1. Objetivo y alcance
 
@@ -12,10 +12,10 @@ El proceso será de solo lectura. No dará de alta ni de baja servicios, no camb
 
 ## 2. Enfoque acordado
 
-**Python + Playwright con Chromium visible y un contexto aislado no persistente.** La interfaz local (propuesta: Tkinter) tendrá dos opciones claramente separadas:
+**Python + Playwright con Chromium visible y un contexto aislado no persistente.** La interfaz local (Tkinter) tendrá dos opciones claramente separadas:
 
 1. **Ingresar manualmente (recomendado y seleccionado por defecto).** El navegador abre el portal oficial; la persona escribe CUIT y clave directamente en ARCA y resuelve cualquier control adicional. La aplicación no accede a esos campos ni a la clave.
-2. **Usar un perfil guardado en Windows (opcional, más automatizado).** La persona elige esta opción en cada ejecución y selecciona uno de sus perfiles. Si todavía no tiene perfiles, la interfaz ofrece «Agregar perfil» y guía el alta sin exigir que conozca Credential Manager. El alta solicita un nombre descriptivo, CUIT y clave en un diálogo propio con la clave enmascarada, explica que se guardará localmente en Windows Credential Manager y exige confirmación explícita. La aplicación escribe la credencial directamente en el almacén del sistema, nunca en archivos, configuración, línea de comandos ni logs. Cada perfil usa un destino distinto para permitir varias cuentas y administrar cada una por separado. En las ejecuciones siguientes, la aplicación recupera el perfil seleccionado solo tras la acción explícita, valida que está en HTTPS, en `auth.afip.gob.ar` y que reconoce el formulario esperado, y completa CUIT y clave en el navegador visible. La persona revisa y envía el formulario de ARCA; CAPTCHA, segundo factor y cualquier decisión de seguridad quedan manuales. La interfaz también permite eliminar perfiles guardados.
+2. **Usar un perfil guardado en Windows (opcional, más automatizado).** La persona elige esta opción en cada ejecución y selecciona uno de sus perfiles. Si todavía no tiene perfiles, la interfaz ofrece «Agregar perfil» y guía el alta sin exigir que conozca Credential Manager. El alta solicita un nombre descriptivo, CUIT y clave en un diálogo propio con la clave enmascarada, explica que se guardará localmente en Windows Credential Manager y exige confirmación explícita. La aplicación escribe la credencial directamente en el almacén del sistema, nunca en archivos, configuración, línea de comandos ni logs. Cada perfil usa destinos separados para permitir varias cuentas. En cada uso, la aplicación completa primero solo la CUIT en el formulario oficial; la persona pulsa «Siguiente» y confirma en la app cuando ve el paso de clave. Solo después de validar HTTPS, host y formulario, el RPA recupera la clave del perfil seleccionado y la completa. La persona revisa y envía el formulario; CAPTCHA, segundo factor y cualquier decisión de seguridad quedan manuales. La interfaz también permite eliminar perfiles guardados.
 
 La segunda modalidad reduce la escritura repetitiva y permite manejar varias cuentas desde una interfaz simple, pero **amplía la responsabilidad del programa**: durante el alta recibe la clave en memoria y la persiste en el almacén local; durante el uso la vuelve a recuperar. Windows Credential Manager cifra credenciales bajo la sesión de usuario; esto es mejor que un archivo plano o código, pero no protege frente a malware o código malicioso ejecutado con los mismos permisos del usuario. ARCA recomienda no almacenar la clave en el navegador y deshabilitar el autocompletado; no encontramos una recomendación expresa sobre Credential Manager ni autorización específica para que esta aplicación la almacene. El modo manual seguirá siendo el predeterminado, y la opción de guardar deberá ser optativa, clara y reversible.
 
@@ -23,10 +23,10 @@ Flujo propuesto:
 
 1. La persona abre la aplicación y elige «Ingresar manualmente» o «Usar perfil guardado en Windows».
 2. Se abre la página oficial de Clave Fiscal de ARCA (`https://www.arca.gob.ar/claveFiscal/`) y el RPA sigue el enlace «Ingresar al portal con clave fiscal» que esa página ofrece. En la consulta del 15/11/2026, ese enlace conduce a `https://auth.afip.gob.ar/contribuyente_/login.xhtml`.
-3. En modo manual, la persona ingresa sus datos. En modo perfil, elige una cuenta guardada o la agrega en ese momento. Antes de guardar, ve qué datos se conservarán, dónde se almacenarán y cómo borrarlos. Al iniciar sesión, el RPA valida el host y el formulario, completa los campos y espera que la persona envíe el formulario.
-4. La persona resuelve cualquier CAPTCHA o segundo factor y llega al panel de ARCA.
-5. La aplicación verifica que la sesión esté activa y localiza la lista de servicios; usa «Ver todos» si es necesario.
-6. La interfaz muestra los nombres encontrados y la cantidad total. No guarda el resultado por defecto.
+3. En modo manual, la persona ingresa sus datos. En modo perfil, elige una cuenta guardada o la agrega en ese momento. Antes de guardar, ve qué datos se conservarán, dónde se almacenarán y cómo borrarlos. El RPA completa la CUIT; la persona avanza al paso de clave y confirma en la aplicación. El RPA valida el formulario de clave y recién entonces recupera/completa la contraseña. El login público observado está dividido en dos etapas; la persona debe pulsar «Siguiente» entre ambas.
+4. La persona revisa y envía el formulario, resuelve cualquier CAPTCHA o segundo factor y navega hasta Servicios / «Ver todos».
+5. La persona confirma en la aplicación que abrió «Ver todos» sin filtros; el RPA valida host HTTPS, señal visible de sesión, título completo de la lista, un contenedor semántico bajo la región principal y contenido de servicios. Si detecta paginación, filtro activo, pantalla de login, dominio inesperado o estructura ambigua, se detiene sin declarar éxito. La extracción del DOM aún debe contrastarse en una ejecución local.
+6. La interfaz muestra enlaces de servicio visibles y su cantidad. No guarda el resultado por defecto.
 7. La persona cierra sesión en ARCA desde el propio sitio. Al cerrar la aplicación, se descartan el contexto y sus cookies temporales.
 ## 3. Alternativas consideradas
 
@@ -109,6 +109,9 @@ Primera entrega: código fuente Python, entorno virtual y dependencias fijadas e
 - [ARCA: términos del canal de reporte de vulnerabilidades](https://www.arca.gob.ar/seguridad/programa-divulgacion/terminos-y-condiciones.asp) — alcance específico: reporte de vulnerabilidades, no regla general encontrada para este RPA.
 - [Playwright: aislamiento y contextos](https://playwright.dev/docs/browser-contexts)
 - [Playwright: auto-waiting y actionability](https://playwright.dev/docs/actionability)
+- [Python: estado de soporte y fin de vida de versiones](https://devguide.python.org/versions/)
+- [Playwright 1.65.2 en PyPI](https://pypi.org/project/playwright/1.65.2/)
+- [pywin32 312 en PyPI](https://pypi.org/project/pywin32/312/)
 
 ## Decisiones confirmadas
 
@@ -121,8 +124,13 @@ Primera entrega: código fuente Python, entorno virtual y dependencias fijadas e
 
 ## Pendiente
 
-Revisar esta versión 0.2 del diseño antes de iniciar la implementación. También habrá que confirmar los nombres y estados reales de la UI con el usuario ejecutando localmente; no se solicitarán ni compartirán credenciales.
+Validar el login y los selectores de la lista con la interfaz actual de ARCA durante la primera ejecución local, sin que se compartan credenciales ni datos de contribuyentes. La instalación permite seleccionar Python 3.11 o superior con soporte de seguridad y dependencias compatibles (Playwright 1.65.2 y pywin32 312), sin exigir 3.12. Se comprobó la resolución de dependencias para 3.15 de 64 bits; la validación funcional sigue pendiente. Python 3.9 y 3.10 se evitan por estar fuera de soporte. El diseño aprobado exige detenerse si la estructura no puede verificarse.
 
 
 
 
+
+
+## Actualización: navegación automática tras el ingreso
+
+Se reemplaza la confirmación manual de «Ver todos» por detección del portal y navegación al enlace observado `/portal/app/mis-servicios`. Se valida el host exacto, la ruta, la región principal, el título Mis servicios y las tarjetas con rol de botón y encabezado. No se exige un control Salir visible. La autenticación y desafíos siguen en manos del usuario. Las reglas de esta actualización prevalecen sobre las referencias anteriores al checkbox. Se conserva la sesión ante fallos recuperables y se permite reintentar. Validación automatizada con HTML sintético; validación real pendiente.

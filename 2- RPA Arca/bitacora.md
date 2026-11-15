@@ -14,4 +14,24 @@ La página oficial de Clave Fiscal enlaza actualmente el ingreso con `auth.afip.
 ## Decisión de autenticación y perfiles
 Se acordó ofrecer ingreso manual y una modalidad opcional con credenciales guardadas en Windows Credential Manager. Para que sea utilizable por alguien que no conoce esa herramienta, el plan ahora contempla crear perfiles desde la propia interfaz, manejar más de una cuenta y eliminar perfiles. El alta tendría un diálogo enmascarado, consentimiento explícito y escritura directa al almacén de Windows, sin archivos ni argumentos de proceso. La modalidad manual sigue siendo la predeterminada. Se registró el mayor riesgo: la app recibe la clave al crear el perfil y al iniciar sesión, por lo que permanece expuesta en memoria durante esos pasos. Se añadió una evaluación de CredUI nativo; la API moderna de diálogo no persiste por sí misma las credenciales.
 
-**Estado:** diseño actualizado para revisión. No hay código ni commits.
+**Estado en ese momento:** diseño actualizado para revisión; todavía no había código.
+
+## Inicio de implementación
+Se inició la primera versión en Python con Tkinter y Playwright visible. La capa de perfiles separa metadatos y claves en entradas diferentes de Credential Manager, de modo que listar cuentas no carga las contraseñas; solo se lee la seleccionada. La guía deja el alta, el envío del formulario y los desafíos de acceso bajo control de la persona.
+
+La revisión técnica encontró que el acceso público de ARCA separa CUIT y clave. Se ajustó el modo de perfiles para completar la CUIT, esperar el avance manual y recuperar la clave solo después de verificar el paso HTTPS oficial, la CUIT visible y el campo concreto donde se completará. También se corrigió la lectura UTF-16 del blob de Credential Manager, se dejó la espera humana bombeando eventos de Playwright, y las cancelaciones, expiraciones y cierres fallan de forma segura.
+
+**Ruling:** la aplicación pide que la persona abra manualmente «Ver todos» sin filtros y confirma el listado solo si detecta un indicador visible de sesión, título específico y sección semántica —la interfaz autenticada no se pudo validar con una cuenta de prueba—. Así reduce el riesgo de presentar páginas públicas, favoritos o enlaces generales como lista completa. Costo si es incorrecto: puede rechazar la UI real y requerir ajustar los marcadores después de la primera prueba local; la ausencia de filtros depende también de la confirmación humana.
+
+**Ruling:** los resultados identifican el «perfil elegido» y no afirman que la cuenta autenticada coincida con él; en modo manual la identidad también queda sin verificar. No se inspecciona información adicional de la cuenta para comprobarla. Costo si es incorrecto: el usuario debe confirmar por su cuenta que abrió el CUIT esperado.
+
+**Ruling:** la clave guardada solo se recupera si la segunda etapa muestra la CUIT del perfil, además de host HTTPS y un campo de contraseña reconocido. Costo si es incorrecto: puede detenerse cuando ARCA oculte o enmascare esa CUIT en el paso de clave y requerir que se use el modo manual.
+
+**Ruling:** se recomienda Python 3.12 en lugar del 3.9 instalado, porque Python 3.9 y 3.10 ya están fuera de soporte en la fecha de implementación. Costo si es incorrecto: el usuario debe instalar otro intérprete antes de configurar el entorno.
+
+**Estado:** implementación inicial revisada sintácticamente con Python 3.9.13; pendiente de validación visual del flujo real de ARCA y sus selectores. No hay commits ni pushes.
+
+
+### Reconocimiento del portal y reducción de pasos manuales
+
+La primera prueba real mostró que exigir «Salir» visible y un título de «servicios habilitados» no representaba la interfaz real. Las capturas y fragmentos HTML aportados permitieron identificar el enlace Ver todos y las tarjetas de Mis servicios. Se automatizó la navegación después del ingreso, eliminando el checkbox, y se mantuvo el navegador abierto ante errores recuperables. Se agregaron pruebas con datos ficticios para navegación, extracción de títulos, filtros y rechazo de páginas inesperadas/paginación. Queda pendiente repetir el flujo con ARCA real; las pruebas sintéticas no sustituyen esa validación.
