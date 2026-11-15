@@ -9,7 +9,19 @@ import tkinter as tk
 from tkinter import ttk
 
 
+def configure_browser_path():
+    # Frozen Playwright otherwise defaults to its temporary extraction directory,
+    # while the CLI installs into the user's cache. Both must use the same path.
+    configured = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    if not configured or configured == "0":
+        local = os.environ.get("LOCALAPPDATA")
+        if not local:
+            raise RuntimeError("Windows no informó la carpeta local del usuario.")
+        os.environ["PLAYWRIGHT_BROWSERS_PATH"] = str(Path(local) / "ms-playwright")
+
+
 def check_runtime():
+    configure_browser_path()
     from playwright.sync_api import sync_playwright
     import win32cred  # Verify bundled native extension without reading the vault.
     with sync_playwright() as pw:
@@ -21,6 +33,7 @@ def check_runtime():
 
 
 def install_browser():
+    configure_browser_path()
     # Same bundled driver and environment used by playwright's own CLI.
     from playwright._impl._driver import compute_driver_executable, get_driver_env
     node, cli = compute_driver_executable()

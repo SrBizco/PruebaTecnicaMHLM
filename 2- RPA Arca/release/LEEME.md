@@ -1,4 +1,4 @@
-# Ejercicio 2 - RPA ARCA v1.0.0
+# Ejercicio 2 - RPA ARCA v1.0.1
 
 Windows x64. Extrae la carpeta y abre ARCA-RPA.exe.
 No necesitas instalar Python ni Git. El primer inicio comprueba los componentes y descarga Chromium si falta; requiere Internet, espacio y permisos de escritura en tu perfil de Windows.
@@ -7,6 +7,8 @@ Elige ingreso manual o un perfil local de Windows. Los perfiles se crean en cada
 
 El ejecutable no tiene firma digital. No desactives las protecciones de Windows para ejecutarlo.
 
-Código e instrucciones de construcción: carpeta 2- RPA Arca del repositorio SrBizco/PruebaTecnicaMHLM, etiqueta rpa-v1.0.0.
+Código e instrucciones de construcción: carpeta 2- RPA Arca del repositorio SrBizco/PruebaTecnicaMHLM, etiqueta rpa-v1.0.1.
 
-Validación: 20 pruebas automatizadas; ejecutable probado con caché vacía, instalación de Chromium y verificación posterior. Pendiente validación del ejecutable en una segunda PC. No incluye datos de cuentas ni credenciales.
+Validación: 22 pruebas automatizadas; ejecutable probado con caché vacía, instalación de Chromium y verificación posterior. Pendiente validación del ejecutable en una segunda PC. No incluye datos de cuentas ni credenciales.
+
+Corrección 1.0.1: instalación y detección de Chromium utilizan la misma carpeta persistente del usuario. Verificación del ejecutable con configuración normal exitosa; pendiente repetir en la PC donde falló 1.0.0.

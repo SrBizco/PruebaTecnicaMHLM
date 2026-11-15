@@ -39,3 +39,7 @@ La primera prueba real mostró que exigir «Salir» visible y un título de «se
 ### Empaquetado de la versión local
 
 Se agrega una entrega ejecutable independiente sin reemplazar main.py. PyInstaller incluye intérprete y librerías; un lanzador verifica Chromium y lo instala si falta con el driver de Playwright incluido. El control inicial no lee credenciales ni abre ARCA. Los errores muestran mensajes de preparación sin volcados técnicos. Se agregaron pruebas de componentes presentes, instalación faltante y descarga fallida, más validación del binario con una caché de navegadores aislada. La prueba en una segunda PC sigue siendo necesaria.
+
+### Corrección de detección de Chromium en el ejecutable
+
+La prueba inicial con PLAYWRIGHT_BROWSERS_PATH explícito ocultó una diferencia del entorno empaquetado: Playwright buscaba el navegador junto al driver temporal, mientras el instalador lo descargaba en el perfil de Windows. Se unificó la ruta persistente antes de ambas operaciones y se agregaron pruebas sin configuración explícita y con el valor especial 0. Corrección preparada para la Release rpa-v1.0.1, autorizada por el usuario. Pasaron 22 pruebas y la comprobación del ejecutable con la configuración normal. La prueba con un perfil simulado fue bloqueada; queda pendiente verificar la instalación en la segunda PC.
