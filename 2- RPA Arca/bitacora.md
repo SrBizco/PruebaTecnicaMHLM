@@ -35,3 +35,7 @@ La revisión técnica encontró que el acceso público de ARCA separa CUIT y cla
 ### Reconocimiento del portal y reducción de pasos manuales
 
 La primera prueba real mostró que exigir «Salir» visible y un título de «servicios habilitados» no representaba la interfaz real. Las capturas y fragmentos HTML aportados permitieron identificar el enlace Ver todos y las tarjetas de Mis servicios. Se automatizó la navegación después del ingreso, eliminando el checkbox, y se mantuvo el navegador abierto ante errores recuperables. Se agregaron pruebas con datos ficticios para navegación, extracción de títulos, filtros y rechazo de páginas inesperadas/paginación. Queda pendiente repetir el flujo con ARCA real; las pruebas sintéticas no sustituyen esa validación.
+
+### Empaquetado de la versión local
+
+Se agrega una entrega ejecutable independiente sin reemplazar main.py. PyInstaller incluye intérprete y librerías; un lanzador verifica Chromium y lo instala si falta con el driver de Playwright incluido. El control inicial no lee credenciales ni abre ARCA. Los errores muestran mensajes de preparación sin volcados técnicos. Se agregaron pruebas de componentes presentes, instalación faltante y descarga fallida, más validación del binario con una caché de navegadores aislada. La prueba en una segunda PC sigue siendo necesaria.

@@ -125,3 +125,13 @@ El robot completa la CUIT, verifica el valor y el host, pulsa Siguiente y espera
 ### Envío final y cierre (actualización)
 
 En modo guardado, el robot pulsa también Ingresar, una sola vez, usando su nombre accesible. Chromium se minimiza al crear la ventana; la autenticación manual conserva el navegador visible. Si ARCA requiere intervención, se puede restaurar Chromium desde la barra de tareas. No se garantiza que Windows nunca muestre una ventana transitoria. La salida se reconoce por el campo real de CUIT en el host de autenticación, no por el encabezado antiguo. Si no se confirma la salida, se cierra el contexto local y se informa expresamente que el cierre del servidor no pudo verificarse; la aplicación no queda bloqueada. Estas reglas sustituyen las instrucciones anteriores sobre envío final y reintento obligatorio de cierre.
+
+## Entrega ejecutable Windows x64
+
+`dist/ARCA-RPA.exe` incluye Python, Tkinter, Playwright y pywin32. No necesita Git ni Python instalados en la PC destino. Al arrancar verifica Chromium; si falta, lo descarga con el instalador incluido de Playwright en la carpeta del usuario. Requiere Windows compatible, conexión a Internet, espacio libre y permisos de escritura. No instala Windows ni modifica políticas de seguridad. Ante errores de preparación permite reintentar sin iniciar el acceso a cuentas.
+
+El código original sigue ejecutándose con `.venv\Scripts\python.exe main.py`. Para usar también la preparación automática desde código: `.venv\Scripts\python.exe launcher.py`.
+
+Para reconstruir: prepara `.venv` con `requirements.txt` y ejecuta `build.ps1` desde PowerShell. La herramienta de empaquetado está fijada en `requirements-build.txt`. El empaquetado recoge los módulos y recursos necesarios; no incorpora el repositorio completo, perfiles, `.env` ni las credenciales de Windows. `build/`, `dist/` y el archivo `.spec` generado se excluyen de Git. El binario debe entregarse aparte o como artefacto de una release, no en lugar del código.
+
+El ejecutable no está firmado digitalmente. La instalación del navegador utiliza los servidores de descarga de Playwright; después, el RPA opera contra ARCA. No se descargan nuevas versiones del programa ni se actualizan bibliotecas automáticamente.
