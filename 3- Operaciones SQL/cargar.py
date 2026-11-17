@@ -173,51 +173,14 @@ def build(source, target):
 def export_queries(database, folder):
     db = sqlite3.connect(database)
     try:
-        outputs = {}
         for path in sorted((ROOT / 'sql').glob('[0-9]*.sql')):
             result = db.execute(path.read_text(encoding='utf-8'))
             headers = [col[0] for col in result.description]
             records = result.fetchall()
-            outputs[path.stem] = (headers, records)
             with (folder / (path.stem + '.csv')).open('w', encoding='utf-8-sig', newline='') as out:
                 writer = csv.writer(out, delimiter=';')
                 writer.writerow(headers)
                 writer.writerows(records)
-        lines = ['# Resultados SQL — Operaciones de importación', '',
-                 'Importes en USD declarados en la planilla, agrupados por **mes de oficialización**. '
-                 'No existe fecha de pago: estos resultados no certifican cuándo se pagó efectivamente. '
-                 'Los meses sin registros no se completan con ceros.', '',
-                 'Generado por `cargar.py` desde las consultas de `sql/`. '
-                 'La base preserva filas y valores originales, y documenta cada tratamiento.', '',
-                 '## Cuánto pagó cada importador por mes', '',
-                 '| CUIT | Importador | Mes de oficialización | Operaciones | Total declarado USD |',
-                 '|---|---|---|---:|---:|']
-
-        def safe(value):
-            return str(value).replace('|', r'\|').replace('\n', ' ').replace('\r', ' ')
-
-        for cuit, name, month, count, cents_total, usd in outputs['01_pagos_mensuales'][1]:
-            integer, fraction = usd.split('.')
-            displayed = format(int(integer), ',').replace(',', '.') + ',' + fraction
-            lines.append('| ' + ' | '.join(map(safe, (cuit, name, month, count, displayed))) + ' |')
-        lines += ['', '## Conciliación y tratamiento', '',
-                  'Los valores monetarios de la conciliación están en **centavos USD**. '
-                  'El bruto cubre las filas normalizables; si hay filas en revisión, no debe interpretarse como total completo de la fuente.', '',
-                  '| Control | Resultado |', '|---|---:|']
-        headers, records = outputs['03_conciliacion']
-        lines += ['| ' + safe(k) + ' | ' + safe(v) + ' |' for k, v in zip(headers, records[0])]
-        lines += ['', '| Regla | Observaciones | Filas afectadas | Tratamiento |', '|---|---:|---:|---|']
-        for record in outputs['06_resumen_tratamiento'][1]:
-            lines.append('| ' + ' | '.join(map(safe, record)) + ' |')
-        lines += ['', 'Una fila puede tener varias observaciones. Los controles de CUIT son aritméticos, '
-                  'no registrales. Los desvíos menores del modelo no reemplazan los importes declarados. '
-                  'Ver [detalle por fila y campo](02_incidencias.csv) y [control numérico](05_control_numerico.csv).', '',
-                  'El total declarado corresponde a los tributos registrados; no es el costo integral de importar. '
-                  'La comparación con FOB es descriptiva y no permite concluir rentabilidad ni validar precios de mercado. '
-                  'Ver [ratios por operación](07_fob_y_gastos.csv).', '',
-                  '## Fuente', '',
-                  'SHA-256: `' + db.execute('SELECT sha256 FROM fuente').fetchone()[0] + '`.', '']
-        (folder / '00_respuesta.md').write_text('\n'.join(lines), encoding='utf-8')
     finally:
         db.close()
 

@@ -1,0 +1,2 @@
+# Solo para regenerar el PDF o construir el ZIP. El destinatario no instala nada.
+reportlab==4.4.9

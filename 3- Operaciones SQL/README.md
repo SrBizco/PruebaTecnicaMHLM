@@ -1,70 +1,64 @@
-# Ejercicio 3 — Operaciones de importación
+# Ejercicio 3 - Operaciones de importación
 
-Solución local con **Python + SQLite**, sin servidor ni paquetes externos. La base y los resultados ya están generados; Python solo es necesario para reproducir la carga. DB Browser for SQLite es opcional para inspeccionarlos visualmente.
+## Para leer y consultar sin instalar nada
 
-## Qué abrir
+Extraer completo `dist/Entrega-Operaciones-SQL.zip`. Dentro de `3- Operaciones SQL`:
 
-- [Resultados y decisiones](RESULTADOS.md): respuesta legible a la consigna.
-- [Base lista para consultar](resultados/operaciones.sqlite).
-- [Pagos por importador y mes](resultados/01_pagos_mensuales.csv): 41 combinaciones con movimientos.
-- [Consulta principal](sql/01_pagos_mensuales.sql).
-- [Incidencias y tratamiento, celda por celda](resultados/02_incidencias.csv).
-- [Conciliación](resultados/03_conciliacion.csv).
-- [Fuente preservada](datos/Operaciones_importacion_prueba.xlsx).
+1. Abrir **Informe-operaciones.pdf**: resultados mensuales, inconsistencias y tratamiento.
+2. Abrir **CONSULTAR_SQL.cmd**: inicia el visor incluido con la base en lectura y siete consultas preparadas en pestañas.
+3. Elegir una pestaña y pulsar **Ejecutar SQL** (botón triangular). Para una consulta propia, modificar el texto y volver a ejecutar.
 
-**El mes es el de oficialización, no el de pago efectivo:** la fuente no contiene fecha de pago. Se suma `Total pagado USD` tal como fue declarado, sin agregar FOB, flete o seguro. La ausencia de movimientos en un mes no demuestra que los pagos reales hayan sido cero.
+No hace falta PowerShell ni instalar Python, SQLite o un servidor. El visor es DB Browser for SQLite para Windows x64; el PDF se puede leer en otros sistemas. Extraer el ZIP en una carpeta con permisos de escritura, sin ejecutarlo desde dentro del archivo comprimido. Las preferencias quedan junto al lanzador.
 
-## Reproducir en PowerShell
+El modo lectura protege la base y permite consultas SELECT propias. Los resultados se pueden exportar desde el visor. Las consultas nuevas no actualizan el PDF: este es una instantánea de la fuente entregada.
 
-Desde la carpeta de este ejercicio (adaptar la ruta a la ubicación del clon):
+## Archivos técnicos
+
+- `datos/Operaciones_importacion_prueba.xlsx`: fuente sin modificar.
+- `resultados/operaciones.sqlite`: base consultable y trazabilidad.
+- `sql/01_pagos_mensuales.sql`: respuesta principal.
+- `sql/02` a `sql/07`: incidencias, conciliación, duplicados, controles numéricos, tratamientos y comparación FOB.
+- `resultados/*.csv`: exportaciones técnicas reproducibles, no informe principal.
+- `cargar.py`: lectura XLSX, normalización y carga.
+- `generar_informe.py`: PDF desde resultados SQL.
+- `preparar_entrega.py`: construcción del ZIP portable.
+
+En el repositorio, el PDF se encuentra en `resultados/Informe-operaciones.pdf`. En el ZIP aparece en la raíz, y esta estructura técnica está dentro de `codigo/`, sin duplicar la planilla, la base o los archivos SQL. `Consultas.sqbpro` conserva una copia del texto SQL en las pestañas para facilitar su exploración.
+
+## Reproducir (solo para quien revisa o prepara el código)
+
+La carga requiere Python 3.9+ y solo su biblioteca estándar:
 
 ```powershell
-Set-Location 'C:\Users\Maxi-\PruebaTecnicaMHLM\3- Operaciones SQL'
 py -3 .\cargar.py
 py -3 -m unittest discover -v
 ```
 
-Requiere Python **3.9 o posterior** con biblioteca estándar SQLite. No hay `pip install`, entorno virtual ni dependencias del RPA. En equipos sin el lanzador `py`, usar `python` o la ruta del intérprete. Verificar su versión con `python --version`.
+Para regenerar el PDF o construir la entrega, el entorno de autoría necesita ReportLab. **El destinatario no instala esta dependencia.**
 
-El script resuelve sus rutas respecto de `cargar.py`, por lo que también puede invocarse desde otra carpeta. Por defecto reconstruye únicamente sus archivos dentro de `resultados/`; cerrar DB Browser antes de regenerar la base. Repetir la ejecución reemplaza la instantánea, no añade las mismas filas una segunda vez.
+```powershell
+py -3 -m pip install -r .\requirements-informe.txt
+py -3 .\generar_informe.py
+py -3 .\preparar_entrega.py
+```
 
-Para probar otra copia del mismo formato sin reemplazar los resultados entregados:
+La prueba del PDF requiere además `pypdf`; sin él o sin ReportLab se omite esa prueba y se ejecutan las de carga/empaquetado. El empaquetador descarga recursos oficiales fijados por hash la primera vez; después puede ejecutarse con `--offline`. `dist/`, `entrega/` y `.cache-entrega/` no se versionan. No se publica ningún release automáticamente. Procedencia/licencias: [TERCEROS.md](TERCEROS.md).
+
+Los scripts resuelven rutas respecto de su ubicación. La carga reemplaza una instantánea, no acumula lotes. Para evaluar otra copia del mismo formato sin reemplazar la entregada:
 
 ```powershell
 py -3 .\cargar.py --fuente 'C:\ruta\copia.xlsx' --salida '.\resultado-prueba'
+py -3 .\generar_informe.py --base '.\resultado-prueba\operaciones.sqlite' --salida '.\resultado-prueba\Informe.pdf'
 ```
 
-El lector está acotado a esta planilla: una hoja `Operaciones`, los mismos 17 encabezados, fechas seriales Excel sin hora y calendario 1900. Admite texto inline y compartido; rechaza fórmulas, errores de Excel y estructuras no previstas. No es un importador universal. Una estructura inválida detiene la carga; una fila con datos esenciales inválidos queda conservada en `originales`, con incidencia y fuera del agregado. Los CSV usan UTF-8 con BOM, separador `;` y punto decimal. Para evitar conversiones automáticas de CUIT/fechas al abrirlos en Excel, importar esas columnas como texto.
+## Reglas y alcance
 
-## Consultar con DB Browser
+El mes es el de **oficialización**, porque no existe fecha de pago. Se suma `Total pagado USD` sin agregar FOB, flete o seguro. Los meses ausentes no se imputan como cero. Importes en centavos INTEGER; Decimal normaliza residuos sin sustituir los pagos por cálculos teóricos.
 
-1. Abrir `resultados/operaciones.sqlite` desde **Abrir base de datos**.
-2. En **Ejecutar SQL**, abrir `sql/01_pagos_mensuales.sql` y ejecutar.
-3. Repetir con las otras consultas numeradas. Son consultas de lectura; no ejecutar `esquema.sql` sobre la base entregada, ya que es el esquema de creación utilizado por el cargador.
+Se conservan las 61 filas fuente, se excluye solo la copia exacta 25 (vinculada a 24), se agrupa por CUIT y nombre más frecuente, y se mantiene el canal vacío como NULL. Los controles aritméticos de CUIT y las diferencias menores de redondeo no excluyen operaciones. Datos esenciales inválidos quedan en revisión sin imputar cero. La capa original conserva los lexemas XML como JSON; el XLSX conserva formatos y metadatos.
 
-Puede descargarse DB Browser desde su [sitio oficial](https://sqlitebrowser.org/). No es obligatorio: el cargador ejecuta los mismos archivos SQL y exporta automáticamente sus resultados.
+Tablas: `fuente`, `originales`, `importadores`, `operaciones`, `incidencias`. Vistas: `incluidas`, `pagos_mensuales`, `reconstruccion`. El lector se limita a una hoja `Operaciones`, los mismos 17 encabezados y fechas seriales del calendario Excel 1900 sin hora; rechaza fórmulas, errores de Excel y estructuras distintas. No es un importador universal.
 
-## Organización y trazabilidad
+Control de esta fuente: **61 originales = 60 incluidas + 1 duplicada**, 0 en revisión; bruto USD **1.407.762,56** menos duplicado USD **26.495,18** = **USD 1.381.267,38**. Los 61 totales coinciden con sus tributos registrados. Los CSV usan UTF-8 con BOM, punto decimal y separador `;`.
 
-| Objeto | Contenido |
-|---|---|
-| `fuente` | Nombre, hoja, SHA-256 y versión de reglas de carga. |
-| `originales` | Una fila por registro fuente; valores XML originales A:Q como JSON, sin normalizar. El XLSX preserva los formatos y metadatos. |
-| `importadores` | CUIT textual y denominación más frecuente; desempate alfabético reproducible. |
-| `operaciones` | Valores normalizados, fila de origen y referencia a la copia conservada si es duplicado. |
-| `incidencias` | Fila/campo, regla, original, normalizado o referencia del modelo y tratamiento. |
-| `incluidas` | Filas normalizables, sin copias exactas. |
-| `pagos_mensuales` | Agregación SQL por CUIT y año-mes de oficialización. |
-| `reconstruccion` | Control de componentes con tasas inferidas de la muestra; no certificación tributaria. |
-
-Todo importe monetario de la capa analítica es **INTEGER en centavos**. `Decimal` elimina residuos binarios al cargar; no se sustituyen los pagos por cifras teóricas. Los totales USD de la consulta se formatean desde enteros, sin convertir la suma a `REAL`. Solo los porcentajes descriptivos del control FOB usan aproximación decimal.
-
-Consultas adicionales: `02` incidencias; `03` conciliación; `04` duplicados; `05` reconstrucción numérica; `06` resumen de tratamientos; `07` relación entre FOB y gastos observados. Los CSV se generan directamente de estas consultas, sin agregaciones en pandas o Python.
-
-La deduplicación exige igualdad de los 17 valores fuente; compartir una destinación no basta. Se conserva la primera aparición. Una diferencia futura entre el total declarado y sus componentes se señala y conserva para revisión; no se recalcula silenciosamente el pago. Los controles aritméticos de CUIT no validan identidad registral. No se infieren límites legales, rentabilidad ni costos completos de importación.
-
-## Verificación
-
-Las pruebas de integración cubren: conciliación de fuente y agregado, idempotencia, preservación del archivo original, normalización de nombres, canal NULL, conservación de redondeos, agrupación mensual, importes/fechas inválidos, misma destinación con valores distintos y protección de la base anterior ante un XLSX ilegible. Usan bases temporales; no alteran la entrega.
-
-Para el archivo proporcionado: **61 originales = 60 incluidas + 1 duplicada; 0 en revisión**. Bruto USD **1.407.762,56** − duplicado USD **26.495,18** = analítico USD **1.381.267,38**. Las 61 sumas de tributos concilian con su total registrado.
+El diagnóstico, la revisión numérica y la bitácora se conservan en el repositorio como antecedentes; no se incluyen como múltiples informes en el paquete para el evaluador.

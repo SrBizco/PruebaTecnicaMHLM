@@ -74,7 +74,6 @@ class CargaTests(unittest.TestCase):
         for path in (ROOT / 'sql').glob('[0-9]*.sql'):
             db.execute(path.read_text(encoding='utf-8')).fetchall()
         self.assertTrue((self.dest / '01_pagos_mensuales.csv').exists())
-        self.assertTrue((self.dest / '00_respuesta.md').exists())
 
     def test_missing_amount_quarantined_not_zero(self):
         result = self.run_load(self.changed_source('P2', ''))

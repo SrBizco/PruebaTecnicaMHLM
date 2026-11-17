@@ -26,3 +26,7 @@ Referencias: https://www.sqlite.org/floatingpoint.html ; https://github.com/sqli
 8. Entregar fuente preservada, base .sqlite, scripts de carga, consultas .sql y explicación breve con hallazgos, decisiones y límites. Los resultados finales deben salir de SQL, no de un groupby de pandas.
 
 Todo se mantiene dentro de 3- Operaciones SQL/. La fuente no se modifica; SQLite usa la biblioteca estándar de Python. No commitear ni pushear sin una autorización nueva. El informe y RPA permanecen sin cambios.
+
+## Entrega simplificada aprobada
+
+PDF de lectura y ZIP Windows x64 con DB Browser portable, proyecto de siete consultas y lanzador `.cmd`. Se descarta el informe HTML y cualquier editor propio. El PDF se genera desde SQLite con ReportLab, dependencia exclusiva del entorno de autoría; Mauricio no instala nada para leerlo o consultar. En el paquete hay una sola copia física de fuente, base y SQL dentro de `codigo/`. El proyecto guarda las consultas en pestañas y abre la base en modo lectura con rutas relativas. Los archivos de diagnóstico se conservan como antecedentes en el repositorio, no como informes adicionales en la entrega.
