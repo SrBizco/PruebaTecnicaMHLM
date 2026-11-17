@@ -43,4 +43,8 @@ Las tasas se infieren y son consistentes dentro de la muestra, pero no se verifi
 
 Fuentes conceptuales: https://www.indec.gob.ar/ftp/cuadros/economia/metodologia_comex.pdf ; https://servicioscf.afip.gob.ar/publico/abc/consultas_detalle.aspx?id=11471761 .
 
-No se cargó base de datos, no se ejecutó SQL ni se alteró la fuente. Próxima decisión: aceptar preservación de importes declarados con controles de redondeo separados.
+Esta revisión precedió a la implementación SQL. El usuario aprobó conservar los importes declarados con controles de redondeo separados; ver README.md para la implementación posterior.
+
+## Aclaración de medios centavos
+
+La revisión adicional encontró cuatro empates exactos en los cálculos reconstruidos: O20, 14.434,245 → 14.434,24; L51, 263,695 → 263,69; L38, 752,985 → 752,99; L55, 576,075 → 576,08. Dos quedan hacia abajo y dos hacia arriba: no puede inferirse una política uniforme de redondeo hacia abajo. Se tratan como detalles menores, sin corregir pagos.

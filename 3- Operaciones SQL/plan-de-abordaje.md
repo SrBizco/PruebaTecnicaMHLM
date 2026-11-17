@@ -1,6 +1,6 @@
 # Plan propuesto — Ejercicio 3
 
-Estado: diagnóstico realizado; reglas y herramienta pendientes de acuerdo. Sin base de datos ni SQL final implementados.
+Estado: plan y tratamientos aprobados por el usuario el 17/11/2026. Implementado con Python + SQLite; instrucciones, base y resultados en README.md y resultados/.
 
 ## Opciones
 
@@ -25,4 +25,4 @@ Referencias: https://www.sqlite.org/floatingpoint.html ; https://github.com/sqli
 7. Conciliar 61 registros originales con 60 incluidos y uno excluido; total bruto y analítico con diferencia exacta. Probar que reejecutar la carga no duplique operaciones. Los meses ausentes no representan cero real.
 8. Entregar fuente preservada, base .sqlite, scripts de carga, consultas .sql y explicación breve con hallazgos, decisiones y límites. Los resultados finales deben salir de SQL, no de un groupby de pandas.
 
-Todo se mantiene dentro de 3- Operaciones SQL/. No instalar motores, modificar datos, commitear ni pushear durante esta fase. El informe y RPA permanecen sin cambios.
+Todo se mantiene dentro de 3- Operaciones SQL/. La fuente no se modifica; SQLite usa la biblioteca estándar de Python. No commitear ni pushear sin una autorización nueva. El informe y RPA permanecen sin cambios.

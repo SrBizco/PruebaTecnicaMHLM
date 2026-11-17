@@ -1,0 +1,7 @@
+﻿regla;observaciones;filas;tratamiento
+CANAL_FALTANTE;1;1;"Conservar operacion; canal NULL."
+CUIT_CONTROL;52;52;"Conservar identificador de prueba; control aritmetico, no registral."
+DUPLICADO_EXACTO;1;1;"Conservar original; excluir copia del agregado."
+NOMBRE_CANONICO;1;1;"Agrupar por CUIT; nombre mas frecuente, desempate alfabetico."
+PRECISION_CENTAVOS;21;16;"Normalizar a centavos HALF_UP; conservar lexema original."
+REDONDEO_MENOR;2;2;"Conservar declarado; comparacion en centavos con modelo inferido, no correccion."

@@ -37,9 +37,9 @@ Total bruto de P: USD 1.407.762,56. Si se aprueba excluir una copia exacta: USD 
 
 Registros por mes, antes de tratar el duplicado: enero 6; febrero 6; marzo 8; abril 8; junio 7; julio 4; agosto 7; septiembre 10; octubre 5. Abril tendrá 7 registros incluidos si se aprueba la propuesta.
 
-## Decisiones pendientes
+## Decisiones aprobadas posteriormente
 
-Confirmar el uso del mes de oficialización como aproximación temporal; excluir solo la copia exacta del agregado; conservar CUIT sintéticos y canal nulo; seleccionar el motor. El resto son propuestas, no modificaciones realizadas sobre los datos.
+El 17/11/2026 el usuario aprobó usar mes de oficialización, excluir solo la copia exacta, conservar CUIT sintéticos y canal nulo, y utilizar Python + SQLite. Este archivo conserva el diagnóstico previo; la aplicación de esas reglas se documenta en README.md y en las tablas de trazabilidad.
 
 
 ## Ampliación numérica
