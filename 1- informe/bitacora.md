@@ -56,3 +56,10 @@ Se redujo el perfil a un relato de tres partes y se retiraron del cuerpo las ref
 
 ## Ampliación del relato de proyectos y voz personal
 Se aclararon COMEX, GATEWAY y MOA, y se describió la función de cada proyecto con el nivel de detalle disponible. El perfil incorpora citas breves sobre usuarios, desafíos y mantenimiento; añade la pista de Fito Páez y la idea de un «Instagram de comercio exterior» como hipótesis de innovación. La versión de Google Docs se ajustó para eliminar espacios excesivos y quedó en dos páginas A4, con las fuentes conservadas en la biblia y la matriz.
+
+## Testimonio de Interlog y actualización del cierre — 17/11/2026
+
+Se incorporó la experiencia de Federico Minoyetti con SIDOM y los robots aduaneros, con dos citas breves y atribución explícita. El testimonio completo se conserva como S60; las afirmaciones sobre VUCE y liderazgo nacional no se convirtieron en hechos comprobados. Se recuperó NOÉ de las referencias iniciales y se revalidaron su portada y vínculo público con Mauricio. El cierre conecta NOÉ, la idea de comunidad COMEX y las áreas de la prueba técnica como hipótesis personal. Se preservaron los ajustes manuales de Google Docs, se sincronizó el Markdown y se exportó un PDF de tres páginas, revisado visualmente. Sin commits ni pushes.
+
+## Revisión de la versión personal y sincronización — 17/11/2026
+Se adoptó la nueva redacción del autor y se corrigió un error heredado de la versión anterior: el comienzo en COMEX corresponde a 1989, no a 1996. Se precisaron los objetos societarios, el carácter actual de las funciones de MiSIM y la condición de socio fundador en AIWHI. La formación quedó como estudios en UTN entre 1989 y 1996, sin afirmar carrera ni graduación no corroboradas. La nueva copia compartida permitió lectura, pero rechazó edición con 403; se creó una copia corregida conservando el formato: https://docs.google.com/document/d/1HBdj0EnrR-Nq2DvsTve10RW8Aqy37EIS-QwGHeEE3FQ/edit . Se actualizaron Markdown y PDF del repo; PDF revisado visualmente, tres páginas. Sin commits ni pushes.

@@ -1,41 +1,61 @@
-# Mauricio Hugo López Martín: del comercio exterior al software
+# Informe sobre Mauricio Hugo López Martín
 
-*De una necesidad operativa a una carrera de productos digitales*
+## Antecedentes y formación
 
-## Aprender el oficio antes de programarlo
+El registro más antiguo que encontré sobre Mauricio Hugo López Martín se remonta a 1977, cuando cursaba 1.º B en la Escuela Primaria N.º 45 de Caseros. Años después, entre 1989 y 1996, estudió en la Universidad Tecnológica Nacional (UTN). En 1989 también comenzó su recorrido en comercio exterior (COMEX), sector que terminaría marcando buena parte de su carrera.
 
-En 1977, Mauricio cursó 1.º B en la Escuela Primaria N.º 45 de Caseros. Más tarde completó la carrera de Sistemas en la UTN, donde estudió entre 1989 y 1996. Ese mismo año comenzó su recorrido en comercio exterior, también llamado COMEX: la actividad que organiza importaciones, exportaciones, documentación aduanera y coordinación entre empresas, despachantes y organismos. Conoció sus rutinas desde dentro antes de convertir sus dificultades en ideas de software.
+Sus primeros lenguajes de programación fueron COBOL y Assembler. Aunque las tecnologías fueron cambiando, Mauricio cuenta que programar siempre le resultó algo natural. En 1997 ya aparece vinculado a G.T.C. Group SRL, una empresa cuyo objeto incluía, entre otras actividades, la importación, exportación y los servicios aduaneros.
 
-Sus primeros pasos de programación fueron con COBOL y assembler. En sus recuerdos, el cambio de herramientas nunca apagó el interés: programar siguió siendo algo que le salía “natural”. En 1997 ya aparece vinculado a G.T.C. Group SRL, una empresa cuyo objeto incluía importación, exportación y servicios aduaneros. Ese cruce temprano entre operación y tecnología se convertiría en el hilo conductor de su trabajo.
+Esta combinación de conocimientos técnicos y experiencia operativa parece haber sido fundamental en su trayectoria: conocía los problemas del comercio exterior desde adentro y tenía las herramientas para intentar resolverlos mediante software.
 
-**ELDESPA.COM: reunir lo que el operador necesita.** El sitio, visible en archivos de 2006, ofrecía formularios, rótulos, una librería, directorio, información de buques, bolsa de trabajo y datos SIM. Su función era servir de punto de consulta para quienes trabajaban en aduana: en vez de buscar cada recurso en sitios distintos, podían encontrar herramientas y referencias en una misma ventanilla digital. Es el proyecto digital más antiguo que puede rastrearse en su trayectoria.
+## Trayectoria profesional y principales desarrollos
 
-**Documentación Aduanera: ordenar el soporte del comercio.** En 2006 participó en Gestión de Documentación Aduanera SA y en 2009 cofundó Documentos Aduaneros SA, donde fue presidente inicial. Los objetos de estas sociedades combinaron la gestión aduanera con informática y almacenamiento físico y digital. La apuesta parece clara: ayudar a organizar documentos que acompañan cada operación y conservarlos accesibles. Si ELDESPA reunía recursos en línea, estas iniciativas atendían el problema más amplio de administrar el respaldo documental del comercio exterior.
+Uno de sus primeros proyectos digitales identificables fue **ELDESPA.COM**, un sitio activo al menos desde 2006 que reunía formularios, información de buques, datos del SIM, directorios y hasta una bolsa de trabajo. Su objetivo era facilitar el acceso a recursos que los profesionales aduaneros normalmente debían buscar por separado.
 
-## De resolver su problema a diseñar para otros
+Durante ese período también participó en **Gestión de Documentación Aduanera S.A. (2006)** y cofundó **Documentos Aduaneros S.A. (2009)**, donde fue su primer presidente. Los objetos de ambas sociedades combinaban actividades aduaneras, informática y almacenamiento documental, mostrando una continuidad con su interés por organizar y facilitar el acceso a la información.
 
-**SIDOM: un sistema nacido de la experiencia del usuario.** Mauricio cuenta que lo creó porque, trabajando en comercio exterior, necesitaba una herramienta que no tenía. Su explicación del método es concreta: definir el resultado, entender las necesidades de quien usará el software, “ponerse en sus zapatos” al probarlo y, finalmente, programar. El feedback no aparece como una encuesta al final del proceso: según su relato, el equipo de atención escucha lo que ocurre en el uso cotidiano y convierte esa experiencia en decisiones para el producto. Lo resume así: “gracias a los usuarios es que existe SIDOM”; también dice que “el usuario nos dijo qué hacer”.
+Uno de sus proyectos más representativos es **SIDOM**, una plataforma de gestión integral de comercio exterior que permite administrar importaciones y exportaciones, centralizar documentación, integrar sistemas empresariales y automatizar controles. Según cuenta Mauricio, el proyecto nació de una necesidad propia: mientras trabajaba en el sector, necesitaba una herramienta que no existía y decidió desarrollarla.
 
-SIDOM está orientado a operaciones de comercio exterior y se presenta como una solución que integra servicios mediante APIs, es decir, conexiones que permiten que distintos sistemas intercambien datos. La integración busca evitar volver a cargar información y simplificar tareas que cruzan varias herramientas. Un registro de 2013 identifica a Mauricio y Fernando Hugo Quirós como autores y titulares de una versión del sistema; su historia societaria posterior reúne a colaboradores que también aparecen en Quarks Up.
+Su filosofía de trabajo le da mucha importancia a comprender las necesidades de quienes utilizan el software. De hecho, reconoce que gran parte de la evolución del sistema surgió de sus propios usuarios: *“Gracias a los usuarios es que existe SIDOM”*. Un registro de 2013 lo identifica, junto con Fernando Hugo Quirós, como autor y titular de una versión del sistema.
 
-**PCM y MISIM: el desafío siguiente.** PCM era un sistema para pasar datos al sistema aduanero. Mauricio recuerda que al principio lo intimidaba y pensó: “no lo voy a poder hacer”. Después desarrolló MISIM y miró aquel temor con otra escala: “mi favorito siempre es el próximo”. La secuencia muestra cómo cuenta su aprendizaje: una dificultad técnica deja de ser un límite cuando se la atraviesa y abre paso a otro proyecto. MISIM figura entre sus creaciones. Mi hipótesis es que representó un salto desde la transferencia de datos de PCM hacia una gestión más amplia de la información aduanera; la secuencia de proyectos y su foco de trabajo permiten leerlo así.
+Otros desarrollos importantes fueron **PCM y MiSIM**. PCM estaba relacionado con la transferencia de datos al sistema aduanero y Mauricio recuerda que, al comenzar, llegó a pensar que no sería capaz de desarrollarlo. Actualmente, MiSIM es una herramienta orientada especialmente a despachantes de aduana, que permite preparar y oficializar destinaciones, consultar operaciones y automatizar distintas tareas vinculadas al Sistema Informático Malvina.
 
-**Quarks Up: la colaboración como estructura.** Quarks Up no aparece aquí como una aplicación, sino como una sociedad que formalizó el trabajo con colaboradores recurrentes. Constituida en 2019, designó a Mauricio presidente en 2023. En la trayectoria cumple una función organizativa: reúne personas y responsabilidades alrededor de proyectos tecnológicos.
+En 2019 se constituyó **Quarks Up**, una sociedad que reúne a colaboradores vinculados a sus proyectos tecnológicos y de la que Mauricio fue designado presidente en 2023.
 
-**GATEWAY: del documento a la acción.** GATEWAY es la línea de soluciones de MHLM enfocada en comercio exterior. Su propuesta parte de documentos y novedades operativas para ayudar a despachantes a consultar y actualizar información del servicio MOA (Mis Operaciones Aduaneras), donde se siguen operaciones y novedades aduaneras. Busca transformar esos datos en tareas y próximos pasos, reduciendo búsquedas y seguimiento manual. NOÉ aparece dentro de este entorno como asistente para aplicaciones fiscales y aduaneras.
+Entre sus iniciativas más recientes aparece **GATEWAY**, enfocada en facilitar el seguimiento y la gestión de operaciones aduaneras. Dentro de este entorno se encuentra **NOÉ**, un asistente orientado a simplificar la interacción con aplicaciones fiscales y aduaneras, especialmente las vinculadas a ARCA.
 
-**AIWHI y Radar COMEX: ampliar el tipo de problema.** AIWHI lleva la lógica de automatización a la contabilidad: anuncia conciliaciones, informes y análisis asistidos por inteligencia artificial para ayudar a procesar y relacionar información contable. Radar COMEX resuelve una necesidad diferente y más abierta: consultar normas, nomenclatura y tipos de cambio, con enlaces a fuentes oficiales. El portafolio se ensancha desde el despacho aduanero hacia otros trabajos intensivos en datos, pero mantiene una pregunta común: qué tarea puede hacerse más simple si la información está mejor organizada y conectada.
+También encontré **AIWHI**, una propuesta que utiliza inteligencia artificial para automatizar conciliaciones y análisis contables. Un dato relevante es que AIWHI S.R.L. fue constituida en marzo de 2024 y Mauricio figura entre sus socios fundadores, lo que permite comprobar su vinculación empresarial con el proyecto.
 
-## Una forma de trabajar y una idea de futuro
+Por último, **Radar COMEX** es un portal que reúne novedades normativas, modificaciones arancelarias, información sobre posiciones NCM y tipos de cambio, con referencias a fuentes oficiales. A diferencia de sus sistemas operativos, este proyecto se centra en facilitar la consulta y el seguimiento de información que puede afectar las actividades de comercio exterior.
 
-En sus reflexiones sobre software, Mauricio formula otro criterio de diseño: “En software, bello y elegante significa fácil y barato de hacer y mantener”. La frase desplaza la elegancia de la apariencia hacia la utilidad y el costo de sostener un producto. Junto con su insistencia en probar desde el lugar del usuario, dibuja una filosofía práctica: un sistema vale si resuelve una necesidad real y puede seguir funcionando sin volverse una carga.
+Al relacionar estos desarrollos, encuentro un patrón bastante claro: aunque fueron cambiando las tecnologías y las necesidades, Mauricio mantuvo un interés constante por organizar información, automatizar procesos y facilitar el trabajo de los usuarios.
 
-También cuestiona las promesas grandilocuentes y las métricas infladas en el mundo del software como servicio (SaaS), y defiende los resultados concretos y el reconocimiento de la autoría. En una publicación retoma a Steve Jobs con la frase “la tecnología no es nada, lo importante es la fe en la gente”. Junto con referencias a Nietzsche, Rousseau y Platón, esas citas le sirven para hablar de tecnología, creatividad y esfuerzo. No las presenta como una afición académica, sino como frases e imágenes que le sirven para enmarcar ideas. En otra publicación escribió: “para mí trabajar es mi proyecto siempre”. La frase sugiere que entiende el trabajo menos como una tarea delimitada y más como un espacio continuo de creación. Star Wars aparece en varias publicaciones y “Que la fuerza te acompañe” convive con bromas de programación; un meme explica back-end como cocina, front-end como salón y APIs como camareros. El humor funciona como traducción: acerca un vocabulario técnico a quienes no trabajan a diario con software.
+## Perfil personal y filosofía de trabajo
 
-En su costado más cotidiano aparece también Fito Páez: una publicación personal de Instagram usa una de sus canciones. Es una pista de gusto musical, no alcanza para asegurar que sea fan, pero suma una nota personal a una presencia pública muy ligada al trabajo.
+Una de las ideas que más me llamó la atención fue su definición de un buen desarrollo: *“En software, bello y elegante significa fácil y barato de hacer y mantener”*.
 
-En una conversación reciente, Mauricio expresó que quería “revolucionar nuevamente” el comercio exterior y dejó entrever una idea que describió como “un Instagram de comercio exterior”. Todavía no hay detalles para definir el producto, pero la imagen sugiere una apuesta por conectar actores del sector y hacer circular información de manera más social y directa. Es una hipótesis coherente con su recorrido: pasar de reunir recursos, a integrar sistemas y luego imaginar una capa de comunidad sobre la actividad.
+Esta frase refleja una mirada práctica, donde la calidad de un sistema no depende solamente de su complejidad técnica, sino también de su utilidad y facilidad de mantenimiento.
 
-Mi lectura es la de un desarrollador que piensa como usuario y como operador: empieza por una fricción concreta, escucha la experiencia y construye desde ahí. Su lenguaje combina pragmatismo —facilidad y costo de mantenimiento— con curiosidad por el siguiente desafío y voluntad de ampliar el alcance de sus ideas. La ambición de un “Instagram de comercio exterior” sería, si se concreta, la versión más expansiva de esa misma intuición: cambiar no solo una tarea, sino la forma en que el sector se encuentra y comparte conocimiento.
+En sus publicaciones también cuestiona las promesas exageradas y las métricas infladas del software como servicio (SaaS), y defiende los resultados concretos y el reconocimiento de la autoría. Además, utiliza referencias a Steve Jobs, Nietzsche, Rousseau y Platón para acompañar reflexiones sobre tecnología, creatividad y esfuerzo.
 
+Otra frase que considero representativa es *“Para mí, trabajar es mi proyecto siempre”*, que sugiere que entiende el trabajo como una actividad de creación continua.
 
+En un plano más personal, encontré varias referencias a Star Wars y una publicación de Instagram en la que utiliza una canción de Fito Páez. Si bien son detalles menores, permiten conocer algunos de sus intereses más allá del ámbito profesional, sin que necesariamente podamos sacar conclusiones más profundas sobre sus gustos.
+
+También resulta interesante el testimonio de **Federico Minoyetti, de Interlog S.A.**, quien trabajó con Mauricio en mejoras de SIDOM. Destaca su conocimiento aduanero, el cumplimiento de los plazos y su rapidez para resolver problemas ocasionados por cambios en AFIP. Además, recuerda el desarrollo de robots para consultar operaciones aduaneras.
+
+Federico afirma que Mauricio *“tiene mucha empatía y una gran capacidad de realizar sistemas amigables para los usuarios”*, y concluye diciendo: *“Todos los días lo querría en mi equipo”*.
+
+Considero que este testimonio es especialmente valioso porque permite contrastar lo que Mauricio expresa sobre su filosofía de trabajo con la experiencia concreta de alguien que colaboró con él.
+
+## Conclusiones personales
+
+En una conversación reciente, Mauricio comentó que quería “revolucionar nuevamente” el comercio exterior y **accidentalmente** mencionó una idea similar a **“un Instagram de comercio exterior”**.
+
+Aunque no encontré información suficiente para determinar cómo funcionaría ese producto, la comparación me hace pensar en una plataforma que permita conectar profesionales del sector y compartir información de una manera más fácil y directa.
+
+También considero posible que la variedad de tareas incluidas en esta prueba técnica, como investigación, automatización de ARCA y análisis de datos con SQL, esté relacionada con esa búsqueda de nuevas soluciones.
+
+Otro aspecto que destaco es la coincidencia entre lo que Mauricio dice sobre la importancia de escuchar a los usuarios y el testimonio de Federico Minoyetti. Esa relación entre sus declaraciones y la experiencia de un tercero da mayor sustento a la idea de que su conocimiento operativo y su capacidad para comprender necesidades concretas son dos de sus principales fortalezas.
+
+Mi conclusión es que Mauricio no aborda el software solamente desde la programación, sino también desde su experiencia como usuario del comercio exterior. Esa combinación parece haber impulsado sus proyectos anteriores y podría seguir siendo la base de sus futuros desarrollos.

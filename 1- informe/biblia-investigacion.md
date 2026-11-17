@@ -232,3 +232,41 @@ El reel S56 fue abierto en una vista pública sin iniciar sesión. La interfaz i
 
 
 
+
+## Testimonio de Federico Minoyetti y revisión del cierre — 17/11/2026
+
+**S60 — Conversación con Federico Minoyetti, de Interlog S.A.** Testimonio recogido por Maximo Gianetti y transcrito en esta conversación el 17/11/2026. Fecha de la entrevista no indicada; no se aportaron audio ni transcripción independiente. El cargo exacto de Minoyetti no fue especificado. Es una fuente testimonial sobre su experiencia y sus valoraciones, no una verificación institucional de contratos, autorías o posiciones de mercado.
+
+### Citas conservadas tal como fueron aportadas
+
+1. “lo conocí como referente o lider de una aplicación de comercio exterior o de premaria, era desarrollador, creador, ideologo, etc en SIDOM, tuve una primera entrevista con ellos y despues me manejé directamente con el, en base a consideraciones a mejorar y adaptar a nuestra operatoria”.
+2. “acá a desarrollado diferentes desarrollos, concretamente unos Robots que van contra el sistema con mis operaciones aduaneras de AFIP, siempre con una calidad y profesionalidad impecables, gran actitud y siempre cumpliendo los tiempos propuestos”.
+3. “siempre cada vez que detectamos un error por cambios en la base de afip, el enseguida lo solucionaba, evidentemente tiene una calidad profesional impresionante”.
+4. “tecnicamente es de los que resaltan en temas informaticos para comercio exterior y en interfaces para despachantes”.
+5. “como profesional es excelente, pero destaco su calidad humana, tiene mucha empatia y una gran capacidad de realizar sistemas amigables para los usuarios”.
+6. “además tiene mucho conocimiento aduanero, manejando el lado operativo además del software, entonces tiene la capacidad de adaptar esa parte tecnica dentro del rubro”.
+7. “creo que le dio un gran aporte al comercio exterior con el manejo de datos y la informatizacion, es increible. me animo a decir que es la persona mas importante de Argentina en el rubro del software para comercio exterior y despachantes sin dudas”.
+8. “todos los días lo querría en mi equipo”.
+9. “se nota su importancia ya que la VUCE lo ha contratado para que desarolle para ellos o que sea consultor”.
+
+### Uso y contraste
+
+- El informe incorpora el trabajo de adaptación de SIDOM, robots para operaciones aduaneras, cumplimiento de plazos y respuesta a cambios de AFIP como recuerdos atribuidos a Minoyetti. Conserva dos citas breves sobre empatía, facilidad de uso y deseo de tenerlo en su equipo.
+- La coincidencia entre estos recuerdos y el énfasis de Mauricio en experiencia y feedback del usuario [S57] permite una lectura conjunta. No demuestra por sí sola calidad técnica medida ni autoría exclusiva.
+- La valoración de ser la persona más importante de Argentina en el rubro es una opinión del entrevistado, no un ranking comprobado. Se conserva aquí, sin convertirla en afirmación del informe.
+- La referencia a VUCE requiere corroborar organismo, proyecto, período y modalidad del vínculo. No se añadió como contratación acreditada.
+- Se conserva “premaria” sin interpretar el término. El contexto permite mencionar SIDOM, explícitamente nombrado, sin atribuir un cargo formal.
+
+### NOÉ y la hipótesis de una nueva etapa
+
+Se revisaron las referencias iniciales O02/O05 y S03/S21/S22. El 17/11/2026 se volvió a consultar [NOÉ](https://noe.ar/), cuyo título público es “NOÉ - Para ayudarte con la ARCA”, y la [página de empresa en LinkedIn](https://www.linkedin.com/company/noe-ar), que identifica el sector de desarrollo de software y vincula a Mauricio H Lopez Martín. Estas fuentes respaldan la referencia a NOÉ y ARCA, pero no permiten confirmar que sea su último proyecto ni reproducir como cita una promesa específica de cambiar la forma de operar en ARCA.
+
+El cierre relaciona ese posicionamiento, la idea de un “Instagram de comercio exterior” ya recogida y las tres áreas de esta prueba técnica: investigación, RPA y SQL. La posible búsqueda de capacidades para una nueva transformación del sector se presenta expresamente como hipótesis personal; la consigna no prueba la estrategia de contratación ni el alcance de un producto futuro.
+
+
+## Revisión de funciones de productos y cronología — 17/11/2026
+- **S61 — SIDOM MiSIM:** https://www.sidomsuite.com/sidom-misim . Fuente primaria comercial. El extracto público indexado describe automatización del proceso de declaración aduanera y oficialización desde dispositivos conectados a Internet; la apertura directa entrega una aplicación que requiere JavaScript. Se usa para describir capacidades actuales anunciadas, no para atribuirlas todas a la primera versión de Mauricio.
+- **S62 — SIDOM Suite:** https://sidomsuite.com/ . Fuente primaria comercial, contenido indexado leído. Presenta gestión de importadores/exportadores, documentación centralizada y MiSIM para despachantes integrado con Sistema María. Complementa S33 y S61; no constituye una auditoría funcional.
+- Se revalidó S02 por HTTP: MHLM declara experiencia operativa desde **1989** y construcción de sistemas a fines de los noventa. Se corrige la referencia anterior a 1996 como inicio laboral; 1989–1996 corresponde al período declarado de estudios en UTN.
+- S09 confirma constitución de AIWHI el 19/03/2024, publicada el 21/03/2024, y participación fundadora de Mauricio. La redacción no afirma composición societaria vigente.
+- La versión editorial corregida parte de la copia del autor https://docs.google.com/document/d/16JtRP__gSBZn_TVno_APwQunID9oYwKXIbxLZwe85yE/edit . Por falta de permiso de edición, su copia corregida es https://docs.google.com/document/d/1HBdj0EnrR-Nq2DvsTve10RW8Aqy37EIS-QwGHeEE3FQ/edit . Es la fuente del Markdown y PDF actualizados.
