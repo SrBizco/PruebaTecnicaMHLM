@@ -4,7 +4,7 @@ Tres ejercicios: un perfil de Mauricio Hugo López Martín, un robot para consul
 
 ## Empezar por la entrega completa
 
-El paquete **PruebaTecnicaMHLM-Completa.zip** reúne informes, programas y código. [Descargar el ZIP completo](https://github.com/SrBizco/PruebaTecnicaMHLM/releases/download/entrega-v1.0.0/PruebaTecnicaMHLM-Completa.zip) o consultar la [entrega v1.0.0](https://github.com/SrBizco/PruebaTecnicaMHLM/releases/tag/entrega-v1.0.0). Los ZIP automáticos de GitHub llamados **Source code** no incluyen los ejecutables ni el visor SQL.
+El paquete **PruebaTecnicaMHLM-Completa.zip** reúne informes, programas y código. [Descargar el ZIP completo](https://github.com/SrBizco/PruebaTecnicaMHLM/releases/download/entrega-v1.0.1/PruebaTecnicaMHLM-Completa.zip) o consultar la [entrega v1.0.1](https://github.com/SrBizco/PruebaTecnicaMHLM/releases/tag/entrega-v1.0.1). Los ZIP automáticos de GitHub llamados **Source code** no incluyen los ejecutables ni el visor SQL.
 
 1. Extraer **todo** el ZIP en una carpeta del equipo. No ejecutar los programas desde el comprimido.
 2. Abrir `LEEME.txt` para una guía breve, o seguir esta tabla.

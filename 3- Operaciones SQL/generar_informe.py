@@ -18,113 +18,104 @@ def money(value):
 
 def generate(database, output):
     from reportlab.lib import colors
-    from reportlab.lib.enums import TA_RIGHT
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Preformatted
 
     db = sqlite3.connect(database)
     try:
         monthly = db.execute((ROOT / 'sql/01_pagos_mensuales.sql').read_text(encoding='utf-8')).fetchall()
         cursor = db.execute((ROOT / 'sql/03_conciliacion.sql').read_text(encoding='utf-8'))
-        metrics = dict(zip([c[0] for c in cursor.description], cursor.fetchone()))
+        m = dict(zip([c[0] for c in cursor.description], cursor.fetchone()))
         incidents = db.execute((ROOT / 'sql/06_resumen_tratamiento.sql').read_text(encoding='utf-8')).fetchall()
+        detail = db.execute('SELECT fila,regla,campo,original,normalizado FROM incidencias ORDER BY fila').fetchall()
         digest = db.execute('SELECT sha256 FROM fuente').fetchone()[0]
     finally:
         db.close()
     ink, teal, light = colors.HexColor('#173447'), colors.HexColor('#08787d'), colors.HexColor('#edf4f5')
     styles = {
-        'title': ParagraphStyle('Title', fontName='Helvetica-Bold', fontSize=23, leading=27, textColor=ink, spaceAfter=12),
-        'h2': ParagraphStyle('H2', fontName='Helvetica-Bold', fontSize=13, leading=17, textColor=ink, spaceBefore=12, spaceAfter=7),
-        'body': ParagraphStyle('Body', fontName='Helvetica', fontSize=10, leading=14, textColor=ink, spaceAfter=8),
-        'small': ParagraphStyle('Small', fontName='Helvetica', fontSize=8.4, leading=11, textColor=ink),
-        'table': ParagraphStyle('Table', fontName='Helvetica', fontSize=9, leading=12, textColor=ink),
-        'num': ParagraphStyle('Num', fontName='Helvetica', fontSize=9, leading=12, textColor=ink, alignment=TA_RIGHT),
+        'title': ParagraphStyle('title',fontName='Helvetica-Bold',fontSize=18,leading=22,textColor=ink,spaceAfter=9),
+        'h2': ParagraphStyle('h2',fontName='Helvetica-Bold',fontSize=11,leading=14,textColor=teal,spaceBefore=9,spaceAfter=6),
+        'body': ParagraphStyle('body',fontName='Helvetica',fontSize=9,leading=12,textColor=ink,spaceAfter=7),
+        'small': ParagraphStyle('small',fontName='Helvetica',fontSize=8.2,leading=10.5,textColor=ink),
+        'code': ParagraphStyle('code',fontName='Courier',fontSize=8,leading=10,textColor=ink,spaceAfter=7),
     }
     def para(text, style='body'):
-        return Paragraph(text, styles[style])
-    def grid(data, widths, header=True):
-        table = Table(data, colWidths=widths, repeatRows=1 if header else 0, hAlign='LEFT')
-        commands = [('VALIGN',(0,0),(-1,-1),'TOP'), ('LEFTPADDING',(0,0),(-1,-1),9),
-                    ('RIGHTPADDING',(0,0),(-1,-1),9), ('TOPPADDING',(0,0),(-1,-1),5),
-                    ('BOTTOMPADDING',(0,0),(-1,-1),5), ('LINEBELOW',(0,0),(-1,-1),.3,colors.HexColor('#d8e2e5'))]
-        if header:
-            commands += [('BACKGROUND',(0,0),(-1,0),light)]
-        table.setStyle(TableStyle(commands))
+        return Paragraph(text,styles[style])
+    def grid(data,widths,compact=False):
+        table=Table(data,colWidths=widths,repeatRows=1,hAlign='LEFT')
+        table.setStyle(TableStyle([
+            ('VALIGN',(0,0),(-1,-1),'TOP'),('BACKGROUND',(0,0),(-1,0),light),
+            ('TOPPADDING',(0,0),(-1,-1),1.2 if compact else 5),
+            ('BOTTOMPADDING',(0,0),(-1,-1),1.2 if compact else 5),
+            ('LINEBELOW',(0,0),(-1,-1),.25,colors.HexColor('#d8e2e5')),
+        ]))
         return table
-    story = [para('Operaciones de importación', 'title'),
-             para('Ejercicio 3 · Resultados SQL y tratamiento de la planilla', 'small'), Spacer(1,15)]
-    groups = OrderedDict()
-    for cuit, name, month, count, cents, _ in monthly:
-        groups.setdefault((cuit, name), []).append((month,count,cents))
-    m = metrics
-    story += [para(f'<b>Total declarado incluido: USD {money(m["total_analitico_centavos"])}</b>', 'h2'),
-              para(f'{m["filas_incluidas"]} operaciones incluidas · {len(groups)} importadores · {len(monthly)} combinaciones importador/mes.'),
-              para('Los importes se agrupan por <b>mes de oficialización</b>: la fuente no informa fecha de pago. '
-                   'Se suma la columna “Total pagado USD”, sin agregar FOB, flete o seguro. Los meses sin registros no equivalen a pagos reales de cero.'),
-              para('Conciliación', 'h2'),
-              para(f'{m["filas_originales"]} filas originales = {m["filas_incluidas"]} incluidas + '
-                   f'{m["duplicadas"]} duplicadas + {m["en_revision"]} en revisión.<br/>'
-                   f'Bruto normalizable: USD {money(m["total_normalizado_bruto_centavos"])} - '
-                   f'copias excluidas: USD {money(m["duplicado_centavos"])} = '
-                   f'<b>USD {money(m["total_analitico_centavos"])}</b>.<br/>'
-                   f'Totales que no concilian con los tributos registrados: {m["totales_no_conciliados"]}.'),
-              para('Inconsistencias y decisiones', 'h2')]
-    descriptions = {
-        'DUPLICADO_EXACTO': ('Duplicado exacto', 'Se conserva cada fila original; solo se excluye la copia idéntica en los 17 campos. Compartir una destinación no basta para eliminar una operación.'),
-        'NOMBRE_CANONICO': ('Variación del nombre', 'Se agrupa por CUIT y se usa la denominación más frecuente. El nombre original queda disponible.'),
-        'CANAL_FALTANTE': ('Canal vacío', 'Se registra NULL y se incluye la operación: el canal no es necesario para sumar el pago.'),
-        'PRECISION_CENTAVOS': ('Precisión numérica', 'Se normaliza a centavos enteros con Decimal; se conserva el valor fuente. No se confunden residuos binarios con errores de pago.'),
-        'CUIT_CONTROL': ('CUIT de prueba', 'Se conservan los identificadores aunque su dígito verificador no coincida. El control es aritmético, no una validación registral.'),
-        'REDONDEO_MENOR': ('Redondeos menores', 'Se conservan los importes declarados. Diferencias de un centavo respecto del modelo reconstruido no justifican corregir pagos.'),
+    importers=len({r[0] for r in monthly})
+    story=[para('Operaciones de importación - Resultados SQL','title'),
+           para('La planilla se cargó en SQLite para obtener los totales mensuales por importador y documentar las inconsistencias y su tratamiento.'),
+           para('<b>Criterio:</b> se suma «Total pagado USD» por CUIT y mes de oficialización, porque la fuente no informa fecha de pago. No se agregan FOB, flete ni seguro.'),
+           para(f'<b>Total incluido: USD {money(m["total_analitico_centavos"])}</b> · {m["filas_incluidas"]} operaciones · {importers} importadores.','h2')]
+    data=[[para('<b>Importador</b>','small'),para('<b>Mes</b>','small'),para('<b>Total USD</b>','small')]]
+    last=None
+    for cuit,name,month,count,cents,_ in monthly:
+        key=(cuit,name)
+        data.append([para(escape(name) if key!=last else '', 'small'),para(month,'small'),para(money(cents),'small')])
+        last=key
+    table=grid(data,[315,80,116],True)
+    story += [table,Spacer(1,7),para('Solo se muestran combinaciones con registros. Un mes sin registros no equivale a pagos reales de cero.','small'),PageBreak(),
+              para('Consultas y tratamiento de datos','title'),para('Total por importador y mes','h2'),
+              para('Lógica abreviada de la vista <b>pagos_mensuales</b>, consultada por <b>01_pagos_mensuales.sql</b>. Se suma en centavos enteros y se presenta en USD; <b>incluidas</b> excluye las copias exactas.')]
+    query="""SELECT i.nombre AS importador, o.cuit,
+       substr(o.fecha, 1, 7) AS mes,
+       SUM(o.total_centavos) AS total_centavos
+FROM incluidas o
+JOIN importadores i ON i.cuit = o.cuit
+GROUP BY o.cuit, i.nombre, substr(o.fecha, 1, 7)
+ORDER BY importador, o.cuit, mes;"""
+    story += [Preformatted(query,styles['code']),para('Detalle de inconsistencias: 02_incidencias.sql','h2'),
+              Preformatted('SELECT fila, regla, campo, original, normalizado, tratamiento\nFROM incidencias ORDER BY fila, regla, campo;',styles['code']),
+              para('Controles de apoyo: <b>03_conciliacion</b> (conteos y totales), <b>04_duplicados</b> (copia y original), <b>05_control_numerico</b> (diferencias de cálculo) y <b>06_resumen_tratamiento</b> (resumen de observaciones).','small'),
+              para('Datos observados y tratamiento aplicado','h2')]
+    descriptions={
+        'DUPLICADO_EXACTO':('Duplicado exacto','Se conservó el original y se excluyó la copia del agregado.'),
+        'NOMBRE_CANONICO':('Variación del nombre','Se agrupó por CUIT y se unificó la presentación; se conservó el nombre original.'),
+        'CANAL_FALTANTE':('Canal vacío','Se guardó como NULL y se incluyó la operación: no impide sumar el importe.'),
+        'CUIT_CONTROL':('CUIT de prueba','Se conservó el identificador y se registró el dígito verificador no coincidente. No se inventaron CUIT corregidos.'),
+        'PRECISION_CENTAVOS':('Precisión numérica','Se normalizó a centavos con Decimal, preservando el valor fuente. Los residuos decimales no se interpretan como errores de pago.'),
+        'REDONDEO_MENOR':('Redondeo menor','Se conservaron los importes declarados: diferencias de un centavo frente al modelo HALF_UP no justifican corregir pagos.'),
     }
-    data = [[para('<b>Hallazgo</b>','table'),para('<b>Tratamiento aplicado</b>','table')]]
-    for rule,count,rows,treatment in incidents:
-        title, description = descriptions.get(rule,(rule,treatment))
-        data.append([para(escape(title)+f'<br/>{count} observación(es); {rows} fila(s)','small'),
-                     para(escape(description),'table')])
-    story += [grid(data,[145,365]), Spacer(1,9),
-              para('Una fila puede acumular varias observaciones. El detalle por fila, campo y valor está en la tabla '
-                   '<b>incidencias</b> de la base. Si hay filas en revisión, el bruto normalizable no representa la fuente completa.','small'),
-              para('Alcance', 'h2'),
-              para('La fuente permanece intacta. Las tasas reconstruidas son patrones internos, no una certificación tributaria. '
-                   'El total declarado refleja los tributos registrados, no el costo integral de importar; faltan otros gastos y precios de venta para evaluar rentabilidad.','small')]
-    # Grupos completos para esta muestra; si cambian los datos, Platypus pagina
-    # automaticamente las tablas largas y repite encabezados sin truncar filas.
-    items = list(groups.items())
-    for start in range(0,len(items),4):
-        story += [PageBreak(), para('Pagos mensuales declarados','title'),
-                  para('USD · Mes de oficialización · Solo combinaciones con registros','small'), Spacer(1,5)]
-        for (cuit,name), records in items[start:start+4]:
-            heading = para(escape(name)+f' <font size="9">/ {escape(cuit)}</font>','h2')
-            data = [[para('<b>Mes</b>','table'),para('<b>Operaciones</b>','num'),para('<b>Total USD</b>','num')]]
-            data += [[para(month,'table'),para(str(count),'num'),para(money(cents),'num')] for month,count,cents in records]
-            table = grid(data,[220,115,175])
-            table.setStyle(TableStyle([('TOPPADDING',(0,0),(-1,-1),3),
-                                       ('BOTTOMPADDING',(0,0),(-1,-1),3)]))
-            story.extend([heading,table])
-        if start+4 >= len(items):
-            story += [Spacer(1,8),para('Cómo comprobar o escribir una consulta','h2'),
-                      para('1. Extraer el ZIP completo en una carpeta.<br/>'
-                           '2. Abrir <b>CONSULTAR_SQL.cmd</b> con doble clic.<br/>'
-                           '3. Elegir una pestaña y pulsar <b>Ejecutar SQL</b> (botón triangular).<br/>'
-                           '4. Para una consulta propia, editar el texto y volver a ejecutar.','small'),
-                      Spacer(1,5),para('El visor Windows x64 está incluido: no requiere instalar Python ni otras dependencias. '
-                           'La base abre en modo lectura; el SQL del editor sigue siendo editable. '
-                           'Este PDF es una instantánea y no cambia al ejecutar consultas.','small')]
-    def page_footer(canvas, doc):
-        canvas.setStrokeColor(teal)
-        canvas.line(42, A4[1]-27, A4[0]-42, A4[1]-27)
-        canvas.setFont('Helvetica',8)
-        canvas.setFillColor(ink)
-        canvas.drawString(42,27,'Prueba técnica | Operaciones de importación')
-        canvas.drawRightString(A4[0]-42,27,str(doc.page))
-    output = Path(output)
-    output.parent.mkdir(parents=True,exist_ok=True)
-    doc = SimpleDocTemplate(str(output),pagesize=A4,leftMargin=42,rightMargin=42,
-                            topMargin=42,bottomMargin=43,title='Operaciones de importación - Resultados SQL',
-                            author='Prueba técnica MHLM',subject='Fuente SHA-256: '+digest)
-    doc.build(story,onFirstPage=page_footer,onLaterPages=page_footer)
+    data=[[para('<b>Dato observado</b>','small'),para('<b>Tratamiento</b>','small')]]
+    order={'DUPLICADO_EXACTO':0,'NOMBRE_CANONICO':1,'CANAL_FALTANTE':2,'CUIT_CONTROL':3,'PRECISION_CENTAVOS':4,'REDONDEO_MENOR':5}
+    for rule,count,rows,treatment in sorted(incidents,key=lambda r:order.get(r[0],6)):
+        title,description=descriptions.get(rule,(rule,treatment))
+        matches=[r for r in detail if r[1]==rule]
+        label=f'{title}: {count} observación(es), {rows} fila(s).'
+        if rule in ('DUPLICADO_EXACTO','NOMBRE_CANONICO','CANAL_FALTANTE') and len(matches)==1:
+            row,_,field,original,normalized=matches[0]
+            label=f'{title}: fila {row}.'
+            if rule=='DUPLICADO_EXACTO':
+                description=f'Se conservó la fila {normalized} y se excluyó la copia. Total excluido por duplicados: USD {money(m["duplicado_centavos"])}.'
+            if rule=='NOMBRE_CANONICO':
+                description=f'Se agrupó por CUIT y se presentó como {normalized}; se conservó el nombre recibido.'
+        if rule=='REDONDEO_MENOR':
+            fields={'O':'IVA','L':'seguro','M':'derechos','N':'tasa estadística'}
+            label='; '.join(f'{r[2]}{r[0]} ({fields.get(r[2],r[2])})' for r in matches)+': redondeo menor.'
+            description+=' Valores conservados: '+ '; '.join(f'{r[2]}{r[0]}: USD {money(int(r[3]))}' for r in matches)+'.'
+        data.append([para(escape(label),'small'),para(escape(description),'small')])
+    story += [grid(data,[192,319]),Spacer(1,8),
+              para(f'<b>Comprobación:</b> {m["filas_originales"]} filas originales = {m["filas_incluidas"]} incluidas + {m["duplicadas"]} duplicadas + {m["en_revision"]} en revisión. '
+                   f'USD {money(m["total_normalizado_bruto_centavos"])} - USD {money(m["duplicado_centavos"])} = <b>USD {money(m["total_analitico_centavos"])}</b>. '
+                   f'Totales normalizados que no coinciden con derechos + tasa estadística + IVA: {m["totales_no_conciliados"]}. La fuente permanece intacta.'),
+              para('Una fila puede acumular observaciones. Los controles de cálculo usan un modelo inferido de la muestra, no una validación tributaria. Para ejecutar las consultas incluidas, abrir <b>CONSULTAR_SQL.cmd</b>.','small')]
+    def page_footer(canvas,doc):
+        canvas.setFont('Helvetica',8);canvas.setFillColor(ink)
+        canvas.drawString(42,23,'Ejercicio 3 · Importes en USD')
+        canvas.drawRightString(A4[0]-42,23,str(doc.page))
+    output=Path(output);output.parent.mkdir(parents=True,exist_ok=True)
+    SimpleDocTemplate(str(output),pagesize=A4,leftMargin=42,rightMargin=42,topMargin=36,bottomMargin=38,
+                      title='Operaciones de importación - Resultados SQL',author='Prueba técnica MHLM',
+                      subject='Fuente SHA-256: '+digest).build(story,onFirstPage=page_footer,onLaterPages=page_footer)
 
 
 if __name__ == '__main__':

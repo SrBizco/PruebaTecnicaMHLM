@@ -36,3 +36,7 @@ El usuario consideró excesiva la interfaz HTML y aprobó reemplazarla por un PD
 El PDF se genera directamente desde SQLite; ReportLab solo es necesario para producirlo, nunca para el destinatario. La carga SQL sigue usando biblioteca estándar. Se reorganizó el ZIP para no duplicar físicamente base, consultas, planilla y exportaciones: quedan en `codigo/`; el PDF y el acceso al visor están en la raíz. La revisión automática bloqueó la eliminación recursiva de carpetas generadas; se limitó la limpieza a archivos concretos obsoletos. Cachés y extracciones previas siguen ignoradas por Git y no entran en el nuevo ZIP. No se modificaron los ejercicios 1 y 2 ni se realizaron commits o pushes.
 
 Verificación de la entrega PDF: 7/7 pruebas pasan con el entorno de autoría; en Python 3.9 sin librerías PDF pasan las seis pruebas de carga/empaquetado y se omite explícitamente la prueba PDF. Se renderizaron y revisaron visualmente las tres páginas, se comprobó el SHA-256 original, y el ZIP contiene un PDF, una base, una planilla y ningún HTML.
+
+
+## Informe final conciso
+Se reemplazó la presentación SQL por dos páginas con totales mensuales, consultas e incidencias, a partir del ayudamemoria aprobado. El generador sigue consultando SQLite; no se alteraron datos ni reglas. IVA (O20) y seguro (L51) se identifican por nombre.

@@ -1,5 +1,7 @@
 # Prueba técnica MHLM — entrega completa
 
+Versión 1.0.1: informe SQL simplificado a dos páginas, centrado en totales mensuales, consultas e inconsistencias. Se conserva el RPA 1.0.2 y no cambian los datos ni los criterios de cálculo.
+
 Descargar **PruebaTecnicaMHLM-Completa.zip** y extraerlo completo. Empezar por **LEEME.txt** o **README.md**.
 
 Incluye los tres ejercicios:

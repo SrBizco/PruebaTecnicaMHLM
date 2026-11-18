@@ -18,3 +18,7 @@
 ZIP de 165 archivos, aproximadamente 82 MiB. Hash del RPA idéntico a la entrega validada 1.0.2. Siete consultas ejecutadas sobre la base extraída en modo lectura (41 filas en pagos mensuales). Ambos PDF tienen tres páginas; el informe SQL regenerado conserva el texto del informe versionado. El manifiesto y el SHA-256 externo permiten verificar todos los archivos.
 
 En la primera comprobación, el PDF SQL regenerado no coincidió byte a byte con el anterior por los metadatos de generación; se comprobó su texto completo y se compara el binario contra el paquete SQL recién generado. También se corrigió el cierre explícito de la conexión SQLite del verificador para permitir limpiar la carpeta temporal en Windows. No se modificó la lógica de los ejercicios ni se repitió el login real de ARCA.
+
+
+## Actualización entrega-v1.0.1
+El informe SQL pasa a dos páginas; se regeneran ambos paquetes y sus hashes. El perfil conserva tres páginas y el RPA sigue siendo 1.0.2, sin modificaciones.
